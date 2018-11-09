@@ -1,0 +1,19 @@
+# Logs
+logs
+*.log
+node_modules
+
+# OSX
+.DS_Store
+
+# Intellij
+.idea
+
+# App packaged
+out/
+dist/
+.cache/
+release/
+
+.yalc/
+yalc.lock

@@ -1,0 +1,9 @@
+{
+  "extends": [
+    "tslint-config-station",
+    "rxjs-tslint-rules"
+  ],
+  "rules": {
+    "import-blacklist": [true, "lodash"]
+  }
+}

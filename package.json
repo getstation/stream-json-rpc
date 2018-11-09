@@ -1,0 +1,32 @@
+{
+  "name": "electron-worker",
+  "version": "1.0.0",
+  "main": "lib/index.js",
+  "author": "joel@getstation.com",
+  "license": "MIT",
+  "scripts": {
+    "test-node-ipc": "xvfb-maybe electron-mocha --require-main test/node-ipc/main-loader.js --renderer test/node-ipc/renderer-loader.js"
+  },
+  "devDependencies": {
+    "@types/expect": "^1.20.3",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "8",
+    "@types/node-ipc": "^9.1.1",
+    "electron": "^3.0.8",
+    "electron-mocha": "^6.0.4",
+    "expect": "^23.6.0",
+    "mocha": "^5.2.0",
+    "node-ipc": "^9.1.1",
+    "rxjs-tslint-rules": "^4.11.0",
+    "ts-mocha": "^2.0.0",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "tslint-config-station": "^0.5.1",
+    "typescript": "^3.1.6",
+    "xvfb-maybe": "^0.2.1"
+  },
+  "dependencies": {
+    "debug": "^4.1.0",
+    "rxjs": "^6.3.3"
+  }
+}
