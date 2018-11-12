@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "outDir": "lib",
+    "declaration": true,
     "allowJs": false,
     "experimentalDecorators": true,
     "removeComments": false,
