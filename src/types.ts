@@ -6,7 +6,7 @@ export interface Callback {
 
 export interface IPCChannelPublic {
   remoteCall: <T>(remoteId: string, eventName: string, args: any[], t?: number) => Promise<T | undefined>,
-  initializeHandler: <T, R>(handler: IPCRequestHandler<T, R>) => Subscription,
+  initializeHandler: <T extends any[], R>(handler: IPCRequestHandler<T, R>) => Subscription,
 }
 
 export interface IPCChannelListener {
@@ -39,6 +39,6 @@ export interface IPCResponse<T> {
   },
 }
 
-export interface IPCRequestHandler<T, R> {
-  (request: IPCRequest<T>): Promise<R>,
+export interface IPCRequestHandler<T extends any[], R> {
+  (channel: string, ...args: T): Promise<R>,
 }

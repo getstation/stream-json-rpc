@@ -1,6 +1,6 @@
-import ipcchannel from '../../src/ipcchannel';
-import { IPCChannelPublic, IPCRequest } from '../../src/types';
 import * as ipc from 'node-ipc';
+import ipcchannel from '../../src/ipcchannel';
+import { IPCChannelPublic } from '../../src/types';
 import { Args } from './types';
 
 let channel: IPCChannelPublic;
@@ -43,13 +43,12 @@ const init = () => {
     },
   });
 
-  channel.initializeHandler(async (request: IPCRequest<number[]>) => {
-    const n = request.args[0];
-    switch (request.channel) {
+  channel.initializeHandler(async (c: string, arg1: number) => {
+    switch (c) {
       case 'inc':
-        return n + 1;
+        return arg1 + 1;
       default:
-        return n;
+        return arg1;
     }
   });
 

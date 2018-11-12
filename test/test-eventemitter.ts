@@ -1,6 +1,6 @@
-import ipcchannel from '../src/ipcchannel';
 import { EventEmitter } from 'events';
-import { IPCChannelPublic, IPCRequest } from '../src/types';
+import ipcchannel from '../src/ipcchannel';
+import { IPCChannelPublic } from '../src/types';
 import expect = require('expect');
 
 describe('IPCChannel', () => {
@@ -42,13 +42,12 @@ describe('IPCChannel', () => {
       },
     });
 
-    process1.initializeHandler(async (request: IPCRequest<[number]>) => {
-      const n = request.args[0];
-      switch (request.channel) {
+    process1.initializeHandler(async (c: string, arg1: number) => {
+      switch (c) {
         case 'inc':
-          return n + 1;
+          return arg1 + 1;
         default:
-          return n;
+          return arg1;
       }
     });
   });

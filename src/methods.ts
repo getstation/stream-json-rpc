@@ -87,7 +87,7 @@ export function remoteCall<T>(id: string, remoteId: string, channel: IPCChannel,
  * messages to. You need to call this method in any process that you want to
  * execute remote methods on.
  */
-export function initializeHandler<T, R>(id: string, channel: IPCChannel, handler: IPCRequestHandler<T, R>) {
+export function initializeHandler<T extends any[], R>(id: string, channel: IPCChannel, handler: IPCRequestHandler<T, R>) {
   const listener = async (receive: IPCRequest<T>) => {
     d(`Got Message! ${JSON.stringify(receive)}`);
     const sender = channel.send(receive.senderId);
@@ -98,7 +98,7 @@ export function initializeHandler<T, R>(id: string, channel: IPCChannel, handler
     };
 
     try {
-      response.result = await handler(receive);
+      response.result = await handler(receive.channel, ...receive.args);
 
       d(`Replying! ${JSON.stringify(response)}`);
       sender(responseChannel, response);
