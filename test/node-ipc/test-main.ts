@@ -18,7 +18,6 @@ const getIPC = () => {
 const init = () => {
   const ipcClient = getIPC();
   const sockets = new Map();
-  const callbacks = new WeakMap();
 
   ipcClient.on('socket.connected', (data, socket) => {
     sockets.set(data.id, socket);
@@ -27,21 +26,20 @@ const init = () => {
   channel = ipcchannel('client', {
     send(id: string) {
       return (eventName: string, value: any) => {
-        console.log(id, eventName, value)
         ipcClient.emit(sockets.get(id), eventName, {
           args: [value],
         } as Args);
       };
     },
     on(eventName: string, callback: (args: any) => void) {
-      // TODO add a transform method ?
-      callbacks.set(callback, (innerArgs: Args) => {
+      const innerCallback = (innerArgs: Args) => {
         callback(innerArgs.args[0]);
-      });
-      ipcClient.on(eventName, callbacks.get(callback));
+      };
+      ipcClient.on(eventName, innerCallback);
+      return innerCallback;
     },
     removeListener(eventName: string, callback: (args: any) => void) {
-      ipcClient.off(eventName, callbacks.get(callback));
+      ipcClient.off(eventName, callback);
     },
   });
 

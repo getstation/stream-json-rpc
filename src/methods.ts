@@ -114,7 +114,7 @@ export function initializeHandler<T, R>(id: string, channel: IPCChannel, handler
   };
 
   d('Set up listener!');
-  channel.on(requestChannel, listener);
+  const callback = channel.on(requestChannel, listener);
 
-  return new Subscription(() => channel.removeListener(requestChannel, listener));
+  return new Subscription(() => channel.removeListener(requestChannel, callback || listener));
 }

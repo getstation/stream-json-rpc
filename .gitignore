@@ -1,7 +1,9 @@
 # Logs
 logs
 *.log
-node_modules
+
+# node
+/node_modules
 
 # OSX
 .DS_Store
@@ -9,11 +11,9 @@ node_modules
 # Intellij
 .idea
 
-# App packaged
-out/
-dist/
-.cache/
-release/
+# Package
+/lib
 
+# Yalc
 .yalc/
 yalc.lock

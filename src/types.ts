@@ -1,13 +1,17 @@
 import { Subscription } from 'rxjs';
 
+export interface Callback {
+  (...args: any[]): void;
+}
+
 export interface IPCChannelPublic {
   remoteCall: <T>(remoteId: string, eventName: string, args: any[], t?: number) => Promise<T | undefined>,
   initializeHandler: <T, R>(handler: IPCRequestHandler<T, R>) => Subscription,
 }
 
 export interface IPCChannelListener {
-  on: (eventName: string, callback: (...args: any[]) => void) => void,
-  removeListener: (eventName: string, callback: (...args: any[]) => void) => void,
+  on: (eventName: string, callback: Callback) => Callback | void,
+  removeListener: (eventName: string, callback: Callback) => void,
 }
 
 export interface IPCChannelEmitter {

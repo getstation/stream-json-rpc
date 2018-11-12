@@ -4,8 +4,14 @@
   "main": "lib/index.js",
   "author": "joel@getstation.com",
   "license": "MIT",
+  "files": [
+    "/lib"
+  ],
   "scripts": {
-    "test-node-ipc": "xvfb-maybe electron-mocha --require-main test/node-ipc/main-loader.js --renderer test/node-ipc/renderer-loader.js"
+    "test-node-ipc": "xvfb-maybe electron-mocha --require-main test/node-ipc/main-loader.js --renderer test/node-ipc/renderer-loader.js",
+    "test-events": "ts-mocha test/test-eventemitter.ts",
+    "test": "yarn run test-events && yarn run test-node-ipc",
+    "build": "tsc -p ."
   },
   "devDependencies": {
     "@types/expect": "^1.20.3",

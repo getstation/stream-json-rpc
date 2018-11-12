@@ -21,7 +21,6 @@ const getIPC = () => {
 
 const init = () => {
   const ipcClient = getIPC();
-  const callbacks = new WeakMap();
 
   const channel = ipcchannel('client', {
     send(_id: string) {
@@ -32,13 +31,14 @@ const init = () => {
       };
     },
     on(eventName: string, callback: (...args: any[]) => void) {
-      callbacks.set(callback, (innerArgs: Args) => {
+      const innerCallback = (innerArgs: Args) => {
         callback(innerArgs.args[0]);
-      });
-      ipcClient.on(eventName, callbacks.get(callback));
+      };
+      ipcClient.on(eventName, innerCallback);
+      return innerCallback;
     },
     removeListener(eventName: string, callback: (...args: any[]) => void) {
-      ipcClient.off(eventName, callbacks.get(callback));
+      ipcClient.off(eventName, callback);
     },
   });
 
