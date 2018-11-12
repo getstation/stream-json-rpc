@@ -1,5 +1,5 @@
 {
-  "name": "electron-worker",
+  "name": "remote-tasks",
   "version": "1.0.0",
   "main": "lib/index.js",
   "author": "joel@getstation.com",

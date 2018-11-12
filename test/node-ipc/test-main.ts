@@ -34,6 +34,7 @@ const init = () => {
       };
     },
     on(eventName: string, callback: (args: any) => void) {
+      // TODO add a transform method ?
       callbacks.set(callback, (innerArgs: Args) => {
         callback(innerArgs.args[0]);
       });
