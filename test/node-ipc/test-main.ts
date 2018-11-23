@@ -7,6 +7,8 @@ const getIPC = () => {
   ipc.config.id = 'server';
   ipc.config.silent = true;
   ipc.config.retry = 1000;
+  ipc.config.rawBuffer = true;
+  ipc.config.encoding = 'hex';
   ipc.serve(() => {});
   ipc.server.start();
   return ipc.server;
@@ -28,7 +30,7 @@ class TestDuplex extends Duplex {
 
   // tslint:disable-next-line
   _write(chunk: any, _encoding: any, callback: any) {
-    this.ipcClient.emit(this.socket, 'data', chunk.toString());
+    this.ipcClient.emit(this.socket, chunk);
     callback();
   }
 
@@ -41,10 +43,13 @@ const init = () => {
   const sockets = new Map();
   const channel = rpcchannel();
 
-  ipcClient.on('socket.connected', (data, socket) => {
-    sockets.set(data.id, socket);
-    channel.setLink(data.id, new TestDuplex(ipcClient, socket));
-  });
+  const firstConnection = (data: Buffer, socket: any) => {
+    const id = data.toString('utf-8');
+    sockets.set(id, socket);
+    channel.setLink(id, new TestDuplex(ipcClient, socket));
+    ipcClient.off('data', firstConnection);
+  };
+  ipcClient.on('data', firstConnection);
 
   channel.addRequestHandler('inc', ({ value }: any) => {
     return value + 1;

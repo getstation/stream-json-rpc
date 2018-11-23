@@ -8,11 +8,13 @@ const getIPC = () => {
   ipc.config.id = 'client';
   ipc.config.silent = true;
   ipc.config.retry = 1000;
+  ipc.config.rawBuffer = true;
+  ipc.config.encoding = 'hex';
   ipc.connectTo('server', () => {
     ipc.of.server.on(
       'connect',
       () => {
-        ipc.of.server.emit('socket.connected', { id: ipc.config.id });
+        ipc.of.server.emit(Buffer.from(ipc.config.id, 'utf-8'));
       }
     );
   });
@@ -21,7 +23,6 @@ const getIPC = () => {
 
 class TestDuplex extends Duplex {
   ipcClient: any;
-  socket: any;
 
   constructor(ipcClient: ReturnType<typeof getIPC>) {
     super();
@@ -34,7 +35,7 @@ class TestDuplex extends Duplex {
 
   // tslint:disable-next-line
   _write(chunk: any, _encoding: any, callback: any) {
-    this.ipcClient.emit('data', chunk.toString());
+    this.ipcClient.emit(chunk);
     callback();
   }
 
