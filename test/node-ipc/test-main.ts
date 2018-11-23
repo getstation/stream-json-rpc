@@ -1,9 +1,6 @@
 import * as ipc from 'node-ipc';
-import ipcchannel from '../../src/ipcchannel';
-import { IPCChannelPublic } from '../../src/types';
-import { Args } from './types';
-
-let channel: IPCChannelPublic;
+import { Duplex } from 'stream';
+import rpcchannel from '../../src/rpcchannel';
 
 const getIPC = () => {
   ipc.config.appspace = 'magne4000-test-worker';
@@ -15,41 +12,42 @@ const getIPC = () => {
   return ipc.server;
 };
 
+class TestDuplex extends Duplex {
+  ipcClient: ReturnType<typeof getIPC>;
+  socket: any;
+
+  constructor(ipcClient: ReturnType<typeof getIPC>, socket: any) {
+    super();
+    this.ipcClient = ipcClient;
+    this.socket = socket;
+
+    ipcClient.on('data', data => {
+      this.push(data);
+    });
+  }
+
+  // tslint:disable-next-line
+  _write(chunk: any, _encoding: any, callback: any) {
+    this.ipcClient.emit(this.socket, 'data', chunk.toString());
+    callback();
+  }
+
+  // tslint:disable-next-line
+  _read(_size: any) {}
+}
+
 const init = () => {
   const ipcClient = getIPC();
   const sockets = new Map();
+  const channel = rpcchannel();
 
   ipcClient.on('socket.connected', (data, socket) => {
     sockets.set(data.id, socket);
+    channel.setLink(data.id, new TestDuplex(ipcClient, socket));
   });
 
-  channel = ipcchannel('client', {
-    send(id: string) {
-      return (eventName: string, value: any) => {
-        ipcClient.emit(sockets.get(id), eventName, {
-          args: [value],
-        } as Args);
-      };
-    },
-    on(eventName: string, callback: (args: any) => void) {
-      const innerCallback = (innerArgs: Args) => {
-        callback(innerArgs.args[0]);
-      };
-      ipcClient.on(eventName, innerCallback);
-      return innerCallback;
-    },
-    removeListener(eventName: string, callback: (args: any) => void) {
-      ipcClient.off(eventName, callback);
-    },
-  });
-
-  channel.initializeHandler(async (c: string, arg1: number) => {
-    switch (c) {
-      case 'inc':
-        return arg1 + 1;
-      default:
-        return arg1;
-    }
+  channel.addRequestHandler('inc', ({ value }: any) => {
+    return value + 1;
   });
 
   process.on('exit', () => ipcClient.stop());

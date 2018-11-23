@@ -1,5 +1,5 @@
 {
-  "name": "remote-tasks",
+  "name": "stream-json-rpc",
   "version": "1.0.0",
   "main": "lib/index",
   "types": "lib/index",
@@ -10,21 +10,23 @@
   ],
   "scripts": {
     "test-node-ipc": "xvfb-maybe electron-mocha --require-main test/node-ipc/main-loader.js --renderer test/node-ipc/renderer-loader.js",
-    "test-events": "ts-mocha test/test-eventemitter.ts",
-    "test": "yarn run test-events && yarn run test-node-ipc",
+    "test-electron-ipc": "xvfb-maybe electron-mocha --require-main test/electron-ipc/main-loader.js --renderer test/electron-ipc/renderer-loader.js",
+    "test-events": "ts-mocha test/test-duplex.ts",
+    "test": "concurrently \"yarn run test-events\" \"yarn run test-electron-ipc\" \"yarn run test-node-ipc\"",
     "build": "tsc -p ."
   },
   "devDependencies": {
-    "@types/expect": "^1.20.3",
+    "@types/chai-as-promised": "^7.1.0",
     "@types/mocha": "^5.2.5",
-    "@types/node": "8",
+    "@types/node": "^8.0.0",
     "@types/node-ipc": "^9.1.1",
-    "electron": "^3.0.8",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "concurrently": "^4.1.0",
+    "electron": "^3.0.10",
     "electron-mocha": "^6.0.4",
-    "expect": "^23.6.0",
     "mocha": "^5.2.0",
     "node-ipc": "^9.1.1",
-    "rxjs-tslint-rules": "^4.11.0",
     "ts-mocha": "^2.0.0",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
@@ -34,6 +36,7 @@
   },
   "dependencies": {
     "debug": "^4.1.0",
-    "rxjs": "^6.3.3"
+    "json-rpc-peer": "^0.15.5",
+    "json-rpc-protocol": "^0.13.1"
   }
 }

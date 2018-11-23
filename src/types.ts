@@ -1,44 +1,26 @@
-import { Subscription } from 'rxjs';
+import { Duplex } from 'stream';
 
-export interface Callback {
-  (...args: any[]): void;
+export interface RPCRequestHandler<X, T, R> {
+  (method: X, handler: (params: T) => R | Promise<R>, timeout?: number): () => void,
 }
 
-export interface IPCChannelPublic {
-  remoteCall: <T>(remoteId: string, eventName: string, args: any[], t?: number) => Promise<T | undefined>,
-  initializeHandler: <T extends any[], R>(handler: IPCRequestHandler<T, R>) => Subscription,
+export interface RPCNotificationHandler<X, T> {
+  (method: X, handler: (params: T) => void, timeout?: number): () => void,
 }
 
-export interface IPCChannelListener {
-  on: (eventName: string, callback: Callback) => Callback | void,
-  removeListener: (eventName: string, callback: Callback) => void,
+export interface RPCRequest<T, R> {
+  (targetId: string, method: string, params: T): Promise<R>,
 }
 
-export interface IPCChannelEmitter {
-  send: (eventName: string, ...args: any[]) => void,
+export interface RPCNotify<T> {
+  (targetId: string, method: string, params: T): void,
 }
 
-export interface IPCChannel extends IPCChannelListener {
-  send(id: string): IPCChannelEmitter['send'],
-}
-
-export interface IPCRequest<R> {
-  id: string,
-  senderId: string,
-  channel: string,
-  args: R,
-}
-
-export interface IPCResponse<T> {
-  id: string,
-  senderId: string,
-  result?: T,
-  error?: {
-    message: string,
-    stack: string,
-  },
-}
-
-export interface IPCRequestHandler<T extends any[], R> {
-  (channel: string, ...args: T): Promise<R>,
+export interface RPCChannel {
+  request: RPCRequest<any, any>,
+  notify: RPCNotify<any>,
+  addRequestHandler: RPCRequestHandler<any, any, any>,
+  addNotificationHandler: RPCNotificationHandler<any, any>,
+  setLink(targetId: string, duplex: Duplex): void,
+  deleteLink(targetId: string): void,
 }

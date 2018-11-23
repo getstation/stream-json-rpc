@@ -1,40 +1,19 @@
-import * as ipc from 'node-ipc';
+import { ipcRenderer } from 'electron';
 import { Duplex } from 'stream';
 import rpcchannel from '../../src/rpcchannel';
 import { RPCChannel } from '../../src/types';
 
-const getIPC = () => {
-  ipc.config.appspace = 'magne4000-test-worker';
-  ipc.config.id = 'client';
-  ipc.config.silent = true;
-  ipc.config.retry = 1000;
-  ipc.connectTo('server', () => {
-    ipc.of.server.on(
-      'connect',
-      () => {
-        ipc.of.server.emit('socket.connected', { id: ipc.config.id });
-      }
-    );
-  });
-  return ipc.of.server;
-};
-
 class TestDuplex extends Duplex {
-  ipcClient: any;
-  socket: any;
-
-  constructor(ipcClient: ReturnType<typeof getIPC>) {
+  constructor() {
     super();
-    this.ipcClient = ipcClient;
-
-    ipcClient.on('data', (data: any) => {
+    ipcRenderer.on('data', (_: any, data: any) => {
       this.push(data);
     });
   }
 
   // tslint:disable-next-line
   _write(chunk: any, _encoding: any, callback: any) {
-    this.ipcClient.emit('data', chunk.toString());
+    ipcRenderer.send('data', chunk.toString());
     callback();
   }
 
@@ -43,13 +22,9 @@ class TestDuplex extends Duplex {
 }
 
 const init = () => {
-  const ipcClient = getIPC();
-
   const channel = rpcchannel();
-  channel.setLink('server', new TestDuplex(ipcClient));
-
-  process.on('exit', () => ipcClient.stop());
-
+  channel.setLink('main', new TestDuplex());
+  ipcRenderer.send('socket.connected', 'renderer1');
   return channel;
 };
 
@@ -62,7 +37,7 @@ describe('forwards actions to and from renderer', () => {
 
   it('should increment given number in remote process', (done) => {
     channel
-      .request('server', 'inc', {
+      .request('main', 'inc', {
         value: 1,
       })
       .then((result) => {

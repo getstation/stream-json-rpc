@@ -1,7 +1,7 @@
-import ipcchannel from './ipcchannel';
+import rpcchannel from './rpcchannel';
 import * as Types from './types';
 
 export {
-  ipcchannel,
+  rpcchannel,
   Types,
 };
