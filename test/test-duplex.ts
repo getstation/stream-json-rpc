@@ -3,6 +3,7 @@ import { Duplex } from 'stream';
 import rpcchannel from '../src/rpcchannel';
 import { RPCChannel } from '../src/types';
 import { assert } from './mocha.opts';
+import Peer from '@magne4000/json-rpc-peer';
 
 class TestDuplex extends Duplex {
   w: EventEmitter;
@@ -25,10 +26,12 @@ class TestDuplex extends Duplex {
   _read(_size: any) {}
 }
 
-describe('IPCChannel', () => {
+describe('Simple Duplex', () => {
 
   let process1: RPCChannel;
   let process2: RPCChannel;
+  let peer1to2: Peer;
+  let peer2to1: Peer;
   let notifyCalled: boolean;
 
   before(() => {
@@ -39,23 +42,23 @@ describe('IPCChannel', () => {
 
     // process 1
     process1 = rpcchannel();
-    process1.setLink('process2', duplex2);
-    process1.addRequestHandler('inc', ({ value }: any) => {
+    peer1to2 = process1.connect(duplex2);
+    process1.setRequestHandler('inc', ({ value }: any) => {
       return value + 1;
     });
-    process1.addRequestHandler('wait', ({ value }: any) => {
+    process1.setRequestHandler('wait', ({ value }: any) => {
       return new Promise(resolve => {
         setTimeout(resolve, value);
       });
     }, 500);
-    process1.addNotificationHandler('notify', () => {
+    process1.setNotificationHandler('notify', () => {
       notifyCalled = true;
     });
 
     // process 2
     process2 = rpcchannel();
-    process2.setLink('process1', duplex1);
-    process2.addRequestHandler('dec', ({ value }: any) => {
+    peer2to1 = process2.connect(duplex1);
+    process2.setRequestHandler('dec', ({ value }: any) => {
       return value - 1;
     });
   });
@@ -65,28 +68,28 @@ describe('IPCChannel', () => {
   });
 
   it('should reject request for invalid method', async () => {
-    const result = process2.request('process1', 'noop', {
+    const result = peer2to1.request('noop', {
       value: 1,
     });
     return assert.isRejected(result);
   });
 
   it('should increment given number in remote process', async () => {
-    const result = process2.request('process1', 'inc', {
+    const result = peer2to1.request('inc', {
       value: 1,
     });
     return assert.eventually.equal(result, 2);
   });
 
   it('should decrement given number in remote process', async () => {
-    const result = process1.request('process2', 'dec', {
+    const result = peer1to2.request('dec', {
       value: 1,
     });
     return assert.eventually.equal(result, 0);
   });
 
   it('should timeout', async () => {
-    const result = process2.request('process1', 'wait', {
+    const result = peer2to1.request('wait', {
       value: 1000,
     });
     return assert.isRejected(result, 'timeout');
@@ -94,7 +97,7 @@ describe('IPCChannel', () => {
 
   it('should notify other process', async () => {
     assert.equal(notifyCalled, false);
-    await process2.notify('process1', 'notify', {
+    await peer2to1.notify('notify', {
       value: 1,
     });
     return assert.equal(notifyCalled, true);

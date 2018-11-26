@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "debug": "^4.1.0",
-    "json-rpc-peer": "^0.15.5",
+    "@magne4000/json-rpc-peer": "^0.16.0",
     "json-rpc-protocol": "^0.13.1"
   }
 }

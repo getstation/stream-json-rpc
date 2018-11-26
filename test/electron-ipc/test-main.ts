@@ -26,11 +26,11 @@ class TestDuplex extends Duplex {
 const init = () => {
   const channel = rpcchannel();
 
-  ipcMain.on('socket.connected', (event: any, name: string) => {
-    channel.setLink(name, new TestDuplex(event.sender));
+  ipcMain.on('socket.connected', (event: any) => {
+    channel.connect(new TestDuplex(event.sender));
   });
 
-  channel.addRequestHandler('inc', ({ value }: any) => {
+  channel.setRequestHandler('inc', ({ value }: any) => {
     return value + 1;
   });
 };

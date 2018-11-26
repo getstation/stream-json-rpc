@@ -2,13 +2,6 @@
 # yarn lockfile v1
 
 
-"@babel/runtime@7.0.0-rc.1":
-  version "7.0.0-rc.1"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.0.0-rc.1.tgz#42f36fc5817911c89ea75da2b874054922967616"
-  integrity sha512-Nifv2kwP/nwR39cAOasNxzjYfpeuf/ZbZNtQz5eYxWTC9yHARU9wItFnAwz1GTZ62MU+AtSjzZPMbLK5Q9hmbg==
-  dependencies:
-    regenerator-runtime "^0.12.0"
-
 "@fimbul/bifrost@^0.15.0":
   version "0.15.0"
   resolved "https://registry.yarnpkg.com/@fimbul/bifrost/-/bifrost-0.15.0.tgz#f3a48dee3046681e926c1f970f0b1a67e29e088e"
@@ -27,6 +20,13 @@
     inversify "^5.0.0"
     reflect-metadata "^0.1.12"
     tslib "^1.8.1"
+
+"@magne4000/json-rpc-peer@^0.16.0":
+  version "0.16.0"
+  resolved "https://registry.yarnpkg.com/@magne4000/json-rpc-peer/-/json-rpc-peer-0.16.0.tgz#c94a9044e02be2716703f558afbf3ad9ff4dbafb"
+  integrity sha512-I8RvP57tb8Svryyr/Aps6tgxdmklDjMeTkClMn03Ut9VhzGm4LxEVH3Jyqom9TBCRgylpXRG1sBkBoYQrfi1gQ==
+  dependencies:
+    json-rpc-protocol "^0.13.1"
 
 "@types/chai-as-promised@^7.1.0":
   version "7.1.0"
@@ -895,22 +895,6 @@ json-parse-better-errors@^1.0.1:
   resolved "https://registry.yarnpkg.com/json-parse-better-errors/-/json-parse-better-errors-1.0.2.tgz#bb867cfb3450e69107c131d1c514bab3dc8bcaa9"
   integrity sha512-mrqyZKfX5EhL7hvqcV6WG1yYjnjeuYDzDhhcAAUrq8Po85NBQBJP+ZDUT75qZQ98IkUoBqdkExkukOU7Ts2wrw==
 
-json-rpc-peer@^0.15.5:
-  version "0.15.5"
-  resolved "https://registry.yarnpkg.com/json-rpc-peer/-/json-rpc-peer-0.15.5.tgz#51bc04cd4ff1c71694d9d903ce3c250d34f2d97e"
-  integrity sha512-jZUNbRmcMXTpAnp1WGY9o85IfdGLKp75lBFYOIgpKOT9ZwKDHQOc3UmxOJUUg1bBfI7D1dltR3FSA6D0ZpPMpw==
-  dependencies:
-    "@babel/runtime" "7.0.0-rc.1"
-    json-rpc-protocol "^0.12.0"
-    lodash "^4.17.4"
-
-json-rpc-protocol@^0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/json-rpc-protocol/-/json-rpc-protocol-0.12.0.tgz#bb6bc5f764deab9dec3c6d14328b5faf3283562a"
-  integrity sha512-zev0tw+eiKgMkUbP+JWfVfWiYxFz9IxUhThsrAfTzgfQI7slwaeH1/9esvR/E/Yt8x+kVQY67rSh1ap9BQBvog==
-  dependencies:
-    make-error "^1.3.0"
-
 json-rpc-protocol@^0.13.1:
   version "0.13.1"
   resolved "https://registry.yarnpkg.com/json-rpc-protocol/-/json-rpc-protocol-0.13.1.tgz#eaee783a81eb3553b3cec03bc675963d2201e65f"
@@ -983,7 +967,7 @@ locate-path@^3.0.0:
     p-locate "^3.0.0"
     path-exists "^3.0.0"
 
-lodash@^4.17.10, lodash@^4.17.4:
+lodash@^4.17.10:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
@@ -1420,11 +1404,6 @@ reflect-metadata@^0.1.12:
   version "0.1.12"
   resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.12.tgz#311bf0c6b63cd782f228a81abe146a2bfa9c56f2"
   integrity sha512-n+IyV+nGz3+0q3/Yf1ra12KpCyi001bi4XFxSjbiWWjfqb52iTTtpGXmCCAOWWIAn9KEuFZKGqBERHmrtScZ3A==
-
-regenerator-runtime@^0.12.0:
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.12.1.tgz#fa1a71544764c036f8c49b13a08b2594c9f8a0de"
-  integrity sha512-odxIc1/vDlo4iZcfXqRYFj0vpXFNoGdKMAUieAlFYO6m/nl5e9KR/beGf41z4a1FI+aQgtjhuaSlDxQ0hmkrHg==
 
 repeating@^2.0.0:
   version "2.0.1"

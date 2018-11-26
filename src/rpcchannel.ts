@@ -1,5 +1,5 @@
-// @ts-ignore: no declaration file
-import Peer from 'json-rpc-peer';
+// FIXME get back to trunk when https://github.com/JsCommunity/json-rpc-peer/pull/56 is merged
+import Peer from '@magne4000/json-rpc-peer';
 import { JsonRpcError, JsonRpcPayload } from 'json-rpc-protocol';
 import { Duplex } from 'stream';
 import { RPCChannel } from './types';
@@ -21,10 +21,6 @@ export default function rpcchannel(defaultRequestTimeout?: number): RPCChannel {
     timeout: number,
     handler: (params: any) => any,
   }>();
-  const links = new Map<string, {
-    peer: Peer,
-    duplex: Duplex,
-  }>();
   const notificationHandlers = new Map<string, (params: any) => void>();
   const defaultTimeout = defaultRequestTimeout === undefined ? 5000 : defaultRequestTimeout;
 
@@ -44,16 +40,11 @@ export default function rpcchannel(defaultRequestTimeout?: number): RPCChannel {
         const handler = notificationHandlers.get(message.method)!;
         return handler(message.params);
       }
-      case 'response':
-        return message.result;
-      case 'error':
-        console.error(message.error);
-        throw new Error(message.error.message);
     }
   };
 
   return {
-    addRequestHandler(method: string, handler: (params: any) => any, timeout: number = defaultTimeout) {
+    setRequestHandler(method: string, handler: (params: any) => any, timeout: number = defaultTimeout) {
       if (requestHandlers.has(method)) {
         throw new Error(`Method ${method} already handled`);
       }
@@ -67,7 +58,7 @@ export default function rpcchannel(defaultRequestTimeout?: number): RPCChannel {
         requestHandlers.delete(method);
       };
     },
-    addNotificationHandler(method: string, handler: (params: any) => void) {
+    setNotificationHandler(method: string, handler: (params: any) => void) {
       if (notificationHandlers.has(method)) {
         throw new Error(`Method ${method} already handled`);
       }
@@ -78,27 +69,10 @@ export default function rpcchannel(defaultRequestTimeout?: number): RPCChannel {
         notificationHandlers.delete(method);
       };
     },
-    request(targetId: string, method: string, params: any) {
-      if (!links.has(targetId)) throw new Error(`Unknown target ${targetId}`);
-      return links.get(targetId)!.peer.request(method, params);
-    },
-    notify(targetId: string, method: string, params: any) {
-      if (!links.has(targetId)) throw new Error(`Unknown target ${targetId}`);
-      links.get(targetId)!.peer.notify(method, params);
-    },
-    setLink(targetId: string, duplex: Duplex): void {
+    connect(duplex: Duplex): Peer {
       const peer = new Peer(peerCallback);
       peer.pipe(duplex).pipe(peer);
-      links.set(targetId, {
-        peer,
-        duplex,
-      });
-    },
-    deleteLink(targetId: string): void {
-      if (!links.has(targetId)) return;
-      const { peer, duplex } = links.get(targetId)!;
-      peer.unpipe(duplex).unpipe(peer);
-      links.delete(targetId);
+      return peer;
     },
   };
 }
