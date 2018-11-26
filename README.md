@@ -72,13 +72,13 @@ const channel = rpcchannel(); // Create the channel on the server side
 const firstConnection = (data: Buffer, socket: any) => {
   const id = data.toString('utf-8');
   sockets.set(id, socket);
-  channel.setLink(id, new ServerDuplex(ipc, socket));
+  channel.connect(new ServerDuplex(ipc, socket));
   ipc.off('data', firstConnection);
 };
 ipc.on('data', firstConnection);
 
 // Register handlers
-channel.addRequestHandler('inc', ({ value }: any) => {
+channel.setRequestHandler('inc', ({ value }: any) => {
   return value + 1;
 });
 ```
@@ -95,11 +95,11 @@ import { rpcchannel } from 'stream-json-rpc';
 // (i.e. call `channel.setLink` on his side)
 const ipcClient = getIPC();
 const channel = rpcchannel();
-channel.setLink('server', new TestDuplex(ipcClient));
+const peer = channel.connect(new TestDuplex(ipcClient));
 
 // Call remote method on process 1
-channel
-  .request('server', 'inc', {
+peer
+  .request('inc', {
     value: 1,
   })
   .then((result) => {
