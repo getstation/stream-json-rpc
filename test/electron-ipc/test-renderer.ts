@@ -1,7 +1,7 @@
+import Peer from '@magne4000/json-rpc-peer';
 import { ipcRenderer } from 'electron';
 import { Duplex } from 'stream';
 import rpcchannel from '../../src/rpcchannel';
-import { RPCChannel } from '../../src/types';
 
 class TestDuplex extends Duplex {
   constructor() {
@@ -23,13 +23,13 @@ class TestDuplex extends Duplex {
 
 const init = () => {
   const channel = rpcchannel();
-  channel.setLink('main', new TestDuplex());
+  const mainPeer = channel.connect(new TestDuplex());
   ipcRenderer.send('socket.connected', 'renderer1');
-  return channel;
+  return mainPeer;
 };
 
 describe('forwards actions to and from renderer', () => {
-  let channel: RPCChannel;
+  let channel: Peer;
 
   before(async () => {
     channel = init();
@@ -37,7 +37,7 @@ describe('forwards actions to and from renderer', () => {
 
   it('should increment given number in remote process', (done) => {
     channel
-      .request('main', 'inc', {
+      .request('inc', {
         value: 1,
       })
       .then((result) => {

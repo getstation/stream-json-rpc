@@ -1,3 +1,4 @@
+import Peer from '@magne4000/json-rpc-peer';
 import { Duplex } from 'stream';
 
 export interface RPCRequestHandler<X, T, R> {
@@ -8,19 +9,8 @@ export interface RPCNotificationHandler<X, T> {
   (method: X, handler: (params: T) => void, timeout?: number): () => void,
 }
 
-export interface RPCRequest<T, R> {
-  (targetId: string, method: string, params: T): Promise<R>,
-}
-
-export interface RPCNotify<T> {
-  (targetId: string, method: string, params: T): void,
-}
-
 export interface RPCChannel {
-  request: RPCRequest<any, any>,
-  notify: RPCNotify<any>,
-  addRequestHandler: RPCRequestHandler<any, any, any>,
-  addNotificationHandler: RPCNotificationHandler<any, any>,
-  setLink(targetId: string, duplex: Duplex): void,
-  deleteLink(targetId: string): void,
+  setRequestHandler: RPCRequestHandler<any, any, any>,
+  setNotificationHandler: RPCNotificationHandler<any, any>,
+  connect(duplex: Duplex): Peer,
 }

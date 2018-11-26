@@ -1,7 +1,7 @@
+import Peer from '@magne4000/json-rpc-peer';
 import * as ipc from 'node-ipc';
 import { Duplex } from 'stream';
 import rpcchannel from '../../src/rpcchannel';
-import { RPCChannel } from '../../src/types';
 
 const getIPC = () => {
   ipc.config.appspace = 'magne4000-test-worker';
@@ -47,15 +47,15 @@ const init = () => {
   const ipcClient = getIPC();
 
   const channel = rpcchannel();
-  channel.setLink('server', new TestDuplex(ipcClient));
+  const serverPeer = channel.connect(new TestDuplex(ipcClient));
 
   process.on('exit', () => ipcClient.stop());
 
-  return channel;
+  return serverPeer;
 };
 
 describe('forwards actions to and from renderer', () => {
-  let channel: RPCChannel;
+  let channel: Peer;
 
   before(async () => {
     channel = init();
@@ -63,7 +63,7 @@ describe('forwards actions to and from renderer', () => {
 
   it('should increment given number in remote process', (done) => {
     channel
-      .request('server', 'inc', {
+      .request('inc', {
         value: 1,
       })
       .then((result) => {

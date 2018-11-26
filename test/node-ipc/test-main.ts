@@ -46,12 +46,12 @@ const init = () => {
   const firstConnection = (data: Buffer, socket: any) => {
     const id = data.toString('utf-8');
     sockets.set(id, socket);
-    channel.setLink(id, new TestDuplex(ipcClient, socket));
+    channel.connect(new TestDuplex(ipcClient, socket));
     ipcClient.off('data', firstConnection);
   };
   ipcClient.on('data', firstConnection);
 
-  channel.addRequestHandler('inc', ({ value }: any) => {
+  channel.setRequestHandler('inc', ({ value }: any) => {
     return value + 1;
   });
 
