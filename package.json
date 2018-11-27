@@ -1,8 +1,8 @@
 {
   "name": "stream-json-rpc",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "lib/index",
-  "types": "lib/index",
+  "types": "lib/types",
   "author": "joel@getstation.com",
   "license": "MIT",
   "files": [
@@ -13,7 +13,7 @@
     "test-electron-ipc": "xvfb-maybe electron-mocha --require-main test/electron-ipc/main-loader.js --renderer test/electron-ipc/renderer-loader.js",
     "test-events": "ts-mocha test/test-duplex.ts",
     "test": "concurrently \"yarn run test-events\" \"yarn run test-electron-ipc\" \"yarn run test-node-ipc\"",
-    "build": "tsc -p .",
+    "build": "rimraf lib && tsc -p .",
     "prepublish": "yarn run build"
   },
   "devDependencies": {
@@ -28,6 +28,7 @@
     "electron-mocha": "^6.0.4",
     "mocha": "^5.2.0",
     "node-ipc": "^9.1.1",
+    "rimraf": "^2.6.2",
     "ts-mocha": "^2.0.0",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
