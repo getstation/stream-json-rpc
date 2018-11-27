@@ -1,6 +1,6 @@
 import { ipcMain } from 'electron';
 import { Duplex } from 'stream';
-import rpcchannel from '../../src/rpcchannel';
+import rpcchannel from '../../src';
 
 class TestDuplex extends Duplex {
   webContents: Electron.WebContents;

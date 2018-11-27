@@ -58,7 +58,7 @@ class ClientDuplex extends Duplex {
 And the actual implementation would look like:
 ##### Process 1
 ```typescript
-import { rpcchannel } from 'stream-json-rpc';
+import rpcchannel from 'stream-json-rpc';
 
 // This process acts as node-ipc server
 // But it actually being a "server" is not really relevant,
@@ -85,7 +85,7 @@ channel.setRequestHandler('inc', ({ value }: any) => {
 
 ##### Process 2
 ```typescript
-import { rpcchannel } from 'stream-json-rpc';
+import rpcchannel from 'stream-json-rpc';
 
 // This process acts as node-ipc client
 

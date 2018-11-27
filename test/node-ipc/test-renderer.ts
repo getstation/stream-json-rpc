@@ -1,7 +1,7 @@
 import Peer from '@magne4000/json-rpc-peer';
 import * as ipc from 'node-ipc';
 import { Duplex } from 'stream';
-import rpcchannel from '../../src/rpcchannel';
+import rpcchannel from '../../src';
 
 const getIPC = () => {
   ipc.config.appspace = 'magne4000-test-worker';

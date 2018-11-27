@@ -13,7 +13,8 @@
     "test-electron-ipc": "xvfb-maybe electron-mocha --require-main test/electron-ipc/main-loader.js --renderer test/electron-ipc/renderer-loader.js",
     "test-events": "ts-mocha test/test-duplex.ts",
     "test": "concurrently \"yarn run test-events\" \"yarn run test-electron-ipc\" \"yarn run test-node-ipc\"",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "prepublish": "yarn run build"
   },
   "devDependencies": {
     "@types/chai-as-promised": "^7.1.0",
