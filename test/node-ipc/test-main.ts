@@ -1,6 +1,6 @@
 import * as ipc from 'node-ipc';
 import { Duplex } from 'stream';
-import rpcchannel from '../../src';
+import rpcchannel from '../../src/rpcchannel';
 
 const getIPC = () => {
   ipc.config.appspace = 'magne4000-test-worker';

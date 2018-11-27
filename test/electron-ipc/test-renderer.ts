@@ -1,7 +1,7 @@
 import Peer from '@magne4000/json-rpc-peer';
 import { ipcRenderer } from 'electron';
 import { Duplex } from 'stream';
-import rpcchannel from '../../src';
+import rpcchannel from '../../src/rpcchannel';
 
 class TestDuplex extends Duplex {
   constructor() {

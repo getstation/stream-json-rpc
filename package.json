@@ -2,7 +2,7 @@
   "name": "stream-json-rpc",
   "version": "0.1.0",
   "main": "lib/index",
-  "types": "lib/types",
+  "types": "lib/index",
   "author": "joel@getstation.com",
   "license": "MIT",
   "files": [

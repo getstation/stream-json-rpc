@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import { Duplex } from 'stream';
-import rpcchannel from '../src';
+import rpcchannel from '../src/rpcchannel';
 import { RPCChannel } from '../src/types';
 import { assert } from './mocha.opts';
 import Peer from '@magne4000/json-rpc-peer';
