@@ -1,6 +1,6 @@
 // FIXME get back to trunk when https://github.com/JsCommunity/json-rpc-peer/pull/56 is merged
 import Peer from '@magne4000/json-rpc-peer';
-import { JsonRpcError, JsonRpcPayload } from 'json-rpc-protocol';
+import { JsonRpcError, JsonRpcPayload } from '@magne4000/json-rpc-peer';
 import { Duplex } from 'stream';
 import { RPCChannel } from './types';
 

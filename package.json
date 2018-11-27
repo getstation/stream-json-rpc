@@ -35,8 +35,6 @@
     "xvfb-maybe": "^0.2.1"
   },
   "dependencies": {
-    "debug": "^4.1.0",
-    "@magne4000/json-rpc-peer": "^0.16.0",
-    "json-rpc-protocol": "^0.13.1"
+    "@magne4000/json-rpc-peer": "^0.16.0"
   }
 }
