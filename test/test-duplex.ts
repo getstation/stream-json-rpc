@@ -1,9 +1,8 @@
 import { EventEmitter } from 'events';
 import { Duplex } from 'stream';
 import rpcchannel from '../src/rpcchannel';
-import { RPCChannel } from '../src/types';
+import { RPCChannel, RPCChannelPeer } from '../src/types';
 import { assert } from './mocha.opts';
-import Peer from '@magne4000/json-rpc-peer';
 
 class TestDuplex extends Duplex {
   w: EventEmitter;
@@ -30,8 +29,8 @@ describe('Simple Duplex', () => {
 
   let process1: RPCChannel;
   let process2: RPCChannel;
-  let peer1to2: Peer;
-  let peer2to1: Peer;
+  let peer1to2: RPCChannelPeer;
+  let peer2to1: RPCChannelPeer;
   let notifyCalled: boolean;
 
   before(() => {
@@ -43,22 +42,22 @@ describe('Simple Duplex', () => {
     // process 1
     process1 = rpcchannel();
     peer1to2 = process1.connect(duplex2);
-    process1.setRequestHandler('inc', ({ value }: any) => {
+    peer1to2.setRequestHandler('inc', ({ value }: any) => {
       return value + 1;
     });
-    process1.setRequestHandler('wait', ({ value }: any) => {
+    peer1to2.setRequestHandler('wait', ({ value }: any) => {
       return new Promise(resolve => {
         setTimeout(resolve, value);
       });
     }, 500);
-    process1.setNotificationHandler('notify', () => {
+    peer1to2.setNotificationHandler('notify', () => {
       notifyCalled = true;
     });
 
     // process 2
     process2 = rpcchannel();
     peer2to1 = process2.connect(duplex1);
-    process2.setRequestHandler('dec', ({ value }: any) => {
+    peer2to1.setRequestHandler('dec', ({ value }: any) => {
       return value - 1;
     });
   });

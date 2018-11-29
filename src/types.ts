@@ -10,7 +10,10 @@ export interface RPCNotificationHandler<X, T> {
 }
 
 export interface RPCChannel {
+  connect(duplex: Duplex): RPCChannelPeer,
+}
+
+export interface RPCChannelPeer extends Peer {
   setRequestHandler: RPCRequestHandler<any, any, any>,
   setNotificationHandler: RPCNotificationHandler<any, any>,
-  connect(duplex: Duplex): Peer,
 }

@@ -46,16 +46,14 @@ const init = () => {
   const firstConnection = (data: Buffer, socket: any) => {
     const id = data.toString('utf-8');
     sockets.set(id, socket);
-    channel.connect(new TestDuplex(ipcClient, socket));
+    const peer = channel.connect(new TestDuplex(ipcClient, socket));
+    peer.setRequestHandler('inc', ({ value }: any) => {
+      return value + 1;
+    });
     ipcClient.off('data', firstConnection);
   };
   ipcClient.on('data', firstConnection);
 
-  channel.setRequestHandler('inc', ({ value }: any) => {
-    return value + 1;
-  });
-
   process.on('exit', () => ipcClient.stop());
 };
-
 init();

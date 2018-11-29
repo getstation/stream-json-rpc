@@ -70,17 +70,18 @@ const channel = rpcchannel(); // Create the channel on the server side
 
 // At first connection, store the client socket
 const firstConnection = (data: Buffer, socket: any) => {
-  const id = data.toString('utf-8');
+  const id = data.toString();
   sockets.set(id, socket);
-  channel.connect(new ServerDuplex(ipc, socket));
+  const peer = channel.connect(new ServerDuplex(ipc, socket));
+  
+  // Register handlers
+  peer.setRequestHandler('inc', ({ value }: any) => {
+    return value + 1;
+  });
+  
   ipc.off('data', firstConnection);
 };
 ipc.on('data', firstConnection);
-
-// Register handlers
-channel.setRequestHandler('inc', ({ value }: any) => {
-  return value + 1;
-});
 ```
 
 ##### Process 2

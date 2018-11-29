@@ -27,11 +27,10 @@ const init = () => {
   const channel = rpcchannel();
 
   ipcMain.on('socket.connected', (event: any) => {
-    channel.connect(new TestDuplex(event.sender));
-  });
-
-  channel.setRequestHandler('inc', ({ value }: any) => {
-    return value + 1;
+    const peer = channel.connect(new TestDuplex(event.sender));
+    peer.setRequestHandler('inc', ({ value }: any) => {
+      return value + 1;
+    });
   });
 };
 

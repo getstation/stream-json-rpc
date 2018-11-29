@@ -1,6 +1,6 @@
-import Peer from '@magne4000/json-rpc-peer';
 import * as ipc from 'node-ipc';
 import { Duplex } from 'stream';
+import { RPCChannelPeer } from '../../src';
 import rpcchannel from '../../src/rpcchannel';
 
 const getIPC = () => {
@@ -55,14 +55,14 @@ const init = () => {
 };
 
 describe('forwards actions to and from renderer', () => {
-  let channel: Peer;
+  let peer: RPCChannelPeer;
 
   before(async () => {
-    channel = init();
+    peer = init();
   });
 
   it('should increment given number in remote process', (done) => {
-    channel
+    peer
       .request('inc', {
         value: 1,
       })
