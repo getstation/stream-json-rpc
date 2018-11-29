@@ -66,13 +66,13 @@ import rpcchannel from 'stream-json-rpc';
 
 const ipc = getIPC(); // Instance of NodeIPC.Server
 const sockets = new Map(); // List of clients
-const channel = rpcchannel(); // Create the channel on the server side
 
 // At first connection, store the client socket
 const firstConnection = (data: Buffer, socket: any) => {
   const id = data.toString();
   sockets.set(id, socket);
-  const peer = channel.connect(new ServerDuplex(ipc, socket));
+  const channel = rpcchannel(new ServerDuplex(ipc, socket)); // Create the channel on the server side
+  const peer = channel.peer();
   
   // Register handlers
   peer.setRequestHandler('inc', ({ value }: any) => {
@@ -95,8 +95,8 @@ import rpcchannel from 'stream-json-rpc';
 // That way the server can finish initializing the connection with this process.
 // (i.e. call `channel.setLink` on his side)
 const ipcClient = getIPC();
-const channel = rpcchannel();
-const peer = channel.connect(new TestDuplex(ipcClient));
+const channel = rpcchannel(new TestDuplex(ipcClient));
+const peer = channel.peer();
 
 // Call remote method on process 1
 peer
