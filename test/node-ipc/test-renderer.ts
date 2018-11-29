@@ -46,8 +46,8 @@ class TestDuplex extends Duplex {
 const init = () => {
   const ipcClient = getIPC();
 
-  const channel = rpcchannel();
-  const serverPeer = channel.connect(new TestDuplex(ipcClient));
+  const channel = rpcchannel(new TestDuplex(ipcClient));
+  const serverPeer = channel.peer();
 
   process.on('exit', () => ipcClient.stop());
 

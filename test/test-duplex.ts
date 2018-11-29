@@ -40,8 +40,8 @@ describe('Simple Duplex', () => {
     const duplex2 = new TestDuplex(eventemitter2, eventemitter1);
 
     // process 1
-    process1 = rpcchannel();
-    peer1to2 = process1.connect(duplex2);
+    process1 = rpcchannel(duplex2);
+    peer1to2 = process1.peer();
     peer1to2.setRequestHandler('inc', ({ value }: any) => {
       return value + 1;
     });
@@ -55,8 +55,8 @@ describe('Simple Duplex', () => {
     });
 
     // process 2
-    process2 = rpcchannel();
-    peer2to1 = process2.connect(duplex1);
+    process2 = rpcchannel(duplex1);
+    peer2to1 = process2.peer();
     peer2to1.setRequestHandler('dec', ({ value }: any) => {
       return value - 1;
     });

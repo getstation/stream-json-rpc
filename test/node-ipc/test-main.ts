@@ -41,12 +41,12 @@ class TestDuplex extends Duplex {
 const init = () => {
   const ipcClient = getIPC();
   const sockets = new Map();
-  const channel = rpcchannel();
 
   const firstConnection = (data: Buffer, socket: any) => {
     const id = data.toString('utf-8');
     sockets.set(id, socket);
-    const peer = channel.connect(new TestDuplex(ipcClient, socket));
+    const channel = rpcchannel(new TestDuplex(ipcClient, socket));
+    const peer = channel.peer();
     peer.setRequestHandler('inc', ({ value }: any) => {
       return value + 1;
     });
