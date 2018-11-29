@@ -30,7 +30,9 @@ describe('Simple Duplex', () => {
   let process1: RPCChannel;
   let process2: RPCChannel;
   let peer1to2: RPCChannelPeer;
+  let peer1to2bis: RPCChannelPeer;
   let peer2to1: RPCChannelPeer;
+  let peer2to1bis: RPCChannelPeer;
   let notifyCalled: boolean;
 
   before(() => {
@@ -42,9 +44,14 @@ describe('Simple Duplex', () => {
     // process 1
     process1 = rpcchannel(duplex2);
     peer1to2 = process1.peer();
-    peer1to2.setRequestHandler('inc', ({ value }: any) => {
+    peer1to2bis = process1.peer();
+    peer1to2.setRequestHandler('incby1', ({ value }: any) => {
       return value + 1;
     });
+    peer1to2bis.setRequestHandler('incby2', ({ value }: any) => {
+      return value + 2;
+    });
+
     peer1to2.setRequestHandler('wait', ({ value }: any) => {
       return new Promise(resolve => {
         setTimeout(resolve, value);
@@ -57,6 +64,7 @@ describe('Simple Duplex', () => {
     // process 2
     process2 = rpcchannel(duplex1);
     peer2to1 = process2.peer();
+    peer2to1bis = process2.peer();
     peer2to1.setRequestHandler('dec', ({ value }: any) => {
       return value - 1;
     });
@@ -73,11 +81,25 @@ describe('Simple Duplex', () => {
     return assert.isRejected(result);
   });
 
-  it('should increment given number in remote process', async () => {
-    const result = peer2to1.request('inc', {
+  it('should increment given number by 1 in remote process', async () => {
+    const result = peer2to1.request('incby1', {
       value: 1,
     });
     return assert.eventually.equal(result, 2);
+  });
+
+  it('should increment given number by 2 in remote process', async () => {
+    const result = peer2to1bis.request('incby2', {
+      value: 1,
+    });
+    return assert.eventually.equal(result, 3);
+  });
+
+  it('should throw error because incby1 does not exists on the other end', async () => {
+    const result = peer2to1bis.request('incby1', {
+      value: 1,
+    });
+    return assert.isRejected(result, 'incby1');
   });
 
   it('should decrement given number in remote process', async () => {

@@ -72,6 +72,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.37.tgz#d2db49dc6a4e087c3245f22b92061f22494771e5"
   integrity sha512-Jp39foY8Euv/PG4OGPyzxis82mnjcUtXLEMA8oFMCE4ilmuJgZPdV2nZNV1moz+99EJTtcpOSgDCgATUwABKig==
 
+"@types/shortid@^0.0.29":
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/@types/shortid/-/shortid-0.0.29.tgz#8093ee0416a6e2bf2aa6338109114b3fbffa0e9b"
+  integrity sha1-gJPuBBam4r8qpjOBCRFLP7/6Dps=
+
 ajv@^6.5.5:
   version "6.5.5"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.5.5.tgz#cf97cdade71c6399a92c6d6c4177381291b781a1"
@@ -173,6 +178,13 @@ bcrypt-pbkdf@^1.0.0:
   integrity sha1-pDAdOJtqQ/m2f/PKEaP2Y342Dp4=
   dependencies:
     tweetnacl "^0.14.3"
+
+bpmux@^7.0.15:
+  version "7.0.15"
+  resolved "https://registry.yarnpkg.com/bpmux/-/bpmux-7.0.15.tgz#0610ac70a3b88711f05681c88cbde8fad38532d4"
+  integrity sha512-3nXeNX4wvO6VkDJ4T1aQ4vR8nI0ubRwhUFAr/ua88XTISGtjTUpNSVJrrvCICowlwm8pthsH7xqYiQI+elzQcg==
+  dependencies:
+    frame-stream "^1.1.1"
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -608,6 +620,11 @@ form-data@~2.3.2:
     asynckit "^0.4.0"
     combined-stream "^1.0.6"
     mime-types "^2.1.12"
+
+frame-stream@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/frame-stream/-/frame-stream-1.1.1.tgz#4112e109d6c43c0439b2c5b792a9f36d7898a5fe"
+  integrity sha1-QRLhCdbEPAQ5ssW3kqnzbXiYpf4=
 
 fs-extra@^4.0.1:
   version "4.0.3"

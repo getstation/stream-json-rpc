@@ -3,11 +3,15 @@ import { Duplex } from 'stream';
 import RPCPeer from './peer';
 import { RPCChannel, RPCChannelOptions, RPCChannelPeer } from './types';
 
+const { BPMux } = require('bpmux');
+
 export default function rpcchannel(duplex: Duplex, options: RPCChannelOptions = {}): RPCChannel {
+  const mux = new BPMux(duplex);
   return {
     peer(): RPCChannelPeer {
       const peer = new RPCPeer(options.defaultRequestTimeout);
-      peer.pipe(duplex).pipe(peer);
+      const peerWrapper = mux.multiplex();
+      peer.pipe(peerWrapper).pipe(peer);
       return peer;
     },
   };
