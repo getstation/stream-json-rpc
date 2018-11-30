@@ -4,6 +4,12 @@ import rpcchannel from '../src/rpcchannel';
 import { RPCChannel, RPCChannelPeer } from '../src/types';
 import { assert } from './mocha.opts';
 
+const withTimeout = (p: Promise<any>, timeout: number) =>
+  new Promise((resolve, reject) => {
+    p.then(resolve).catch(reject);
+    setTimeout(reject, timeout, new Error('timeout'));
+  });
+
 class TestDuplex extends Duplex {
   w: EventEmitter;
 
@@ -33,6 +39,7 @@ describe('Simple Duplex', () => {
   let peer1to2bis: RPCChannelPeer;
   let peer2to1: RPCChannelPeer;
   let peer2to1bis: RPCChannelPeer;
+  let peer2to1ter: RPCChannelPeer;
   let notifyCalled: boolean;
 
   before(() => {
@@ -43,12 +50,12 @@ describe('Simple Duplex', () => {
 
     // process 1
     process1 = rpcchannel(duplex2);
-    peer1to2 = process1.peer();
-    peer1to2bis = process1.peer();
-    peer1to2.setRequestHandler('incby1', ({ value }: any) => {
+    peer1to2 = process1.peer('1<->2');
+    peer1to2bis = process1.peer('1b<->2b');
+    peer1to2.setRequestHandler('inc', ({ value }: any) => {
       return value + 1;
     });
-    peer1to2bis.setRequestHandler('incby2', ({ value }: any) => {
+    peer1to2bis.setRequestHandler('inc', ({ value }: any) => {
       return value + 2;
     });
 
@@ -63,8 +70,9 @@ describe('Simple Duplex', () => {
 
     // process 2
     process2 = rpcchannel(duplex1);
-    peer2to1 = process2.peer();
-    peer2to1bis = process2.peer();
+    peer2to1 = process2.peer('1<->2');
+    peer2to1bis = process2.peer('1b<->2b');
+    peer2to1ter = process2.peer('1t<->2t');
     peer2to1.setRequestHandler('dec', ({ value }: any) => {
       return value - 1;
     });
@@ -82,24 +90,17 @@ describe('Simple Duplex', () => {
   });
 
   it('should increment given number by 1 in remote process', async () => {
-    const result = peer2to1.request('incby1', {
+    const result = peer2to1.request('inc', {
       value: 1,
     });
     return assert.eventually.equal(result, 2);
   });
 
   it('should increment given number by 2 in remote process', async () => {
-    const result = peer2to1bis.request('incby2', {
+    const result = peer2to1bis.request('inc', {
       value: 1,
     });
     return assert.eventually.equal(result, 3);
-  });
-
-  it('should throw error because incby1 does not exists on the other end', async () => {
-    const result = peer2to1bis.request('incby1', {
-      value: 1,
-    });
-    return assert.isRejected(result, 'incby1');
   });
 
   it('should decrement given number in remote process', async () => {
@@ -109,10 +110,15 @@ describe('Simple Duplex', () => {
     return assert.eventually.equal(result, 0);
   });
 
-  it('should timeout', async () => {
+  it('should be rejected because method timeout', async () => {
     const result = peer2to1.request('wait', {
       value: 1000,
     });
+    return assert.isRejected(result, 'timeout');
+  });
+
+  it('should timeout because peer is not connected to destination', async () => {
+    const result = withTimeout(peer2to1ter.request('pizza'), 1000);
     return assert.isRejected(result, 'timeout');
   });
 

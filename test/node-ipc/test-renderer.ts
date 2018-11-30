@@ -47,7 +47,7 @@ const init = () => {
   const ipcClient = getIPC();
 
   const channel = rpcchannel(new TestDuplex(ipcClient));
-  const serverPeer = channel.peer();
+  const serverPeer = channel.peer('node-ipc');
 
   process.on('exit', () => ipcClient.stop());
 

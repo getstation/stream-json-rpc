@@ -13,7 +13,7 @@ export interface RPCChannelOptions {
 }
 
 export interface RPCChannel {
-  peer(): RPCChannelPeer,
+  peer(linkId: string): RPCChannelPeer,
 }
 
 export interface RPCChannelPeer extends Peer {

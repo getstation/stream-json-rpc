@@ -23,7 +23,7 @@ class TestDuplex extends Duplex {
 
 const init = () => {
   const channel = rpcchannel(new TestDuplex());
-  const mainPeer = channel.peer();
+  const mainPeer = channel.peer('electron');
   ipcRenderer.send('socket.connected', 'renderer1');
   return mainPeer;
 };

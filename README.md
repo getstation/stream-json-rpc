@@ -71,8 +71,11 @@ const sockets = new Map(); // List of clients
 const firstConnection = (data: Buffer, socket: any) => {
   const id = data.toString();
   sockets.set(id, socket);
-  const channel = rpcchannel(new ServerDuplex(ipc, socket)); // Create the channel on the server side
-  const peer = channel.peer();
+  // Create the channel on the server side
+  const channel = rpcchannel(new ServerDuplex(ipc, socket));
+  // Get a named connection
+  // On the other side, the same call must be done, with the same id, to finish the handshake
+  const peer = channel.peer('connection-id');
   
   // Register handlers
   peer.setRequestHandler('inc', ({ value }: any) => {
@@ -96,7 +99,9 @@ import rpcchannel from 'stream-json-rpc';
 // (i.e. call `channel.setLink` on his side)
 const ipcClient = getIPC();
 const channel = rpcchannel(new TestDuplex(ipcClient));
-const peer = channel.peer();
+// Get a named connection
+// On the other side, the same call must be done, with the same id, to finish the handshake
+const peer = channel.peer('connection-id');
 
 // Call remote method on process 1
 peer

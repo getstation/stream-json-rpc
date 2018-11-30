@@ -46,7 +46,7 @@ const init = () => {
     const id = data.toString('utf-8');
     sockets.set(id, socket);
     const channel = rpcchannel(new TestDuplex(ipcClient, socket));
-    const peer = channel.peer();
+    const peer = channel.peer('node-ipc');
     peer.setRequestHandler('inc', ({ value }: any) => {
       return value + 1;
     });
