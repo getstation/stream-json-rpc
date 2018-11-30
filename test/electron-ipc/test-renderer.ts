@@ -6,14 +6,14 @@ import rpcchannel from '../../src/rpcchannel';
 class TestDuplex extends Duplex {
   constructor() {
     super();
-    ipcRenderer.on('data', (_: any, data: any) => {
+    ipcRenderer.on('data', (_: any, data: Uint8Array) => {
       this.push(data);
     });
   }
 
   // tslint:disable-next-line
-  _write(chunk: any, _encoding: any, callback: any) {
-    ipcRenderer.send('data', chunk.toString());
+  _write(chunk: Buffer, _encoding: any, callback: Function) {
+    ipcRenderer.send('data', new Uint8Array(chunk));
     callback();
   }
 
