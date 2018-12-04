@@ -1,6 +1,6 @@
 {
   "name": "stream-json-rpc",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "main": "lib/index",
   "types": "lib/index",
   "author": "joel@getstation.com",
@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@magne4000/json-rpc-peer": "^0.16.0",
-    "bpmux": "^7.0.15"
+    "bpmux": "^7.0.15",
+    "rxjs": "^6.3.3"
   }
 }
