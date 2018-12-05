@@ -1,8 +1,7 @@
-import { ipcMain } from 'electron';
 import { Duplex } from 'stream';
-import rpcchannel from '../../src/rpcchannel';
+import { ipcMain, ipcRenderer } from 'electron';
 
-class TestDuplex extends Duplex {
+export class ElectronIpcMainDuplex extends Duplex {
   webContents: Electron.WebContents;
 
   constructor(webContents: Electron.WebContents) {
@@ -23,14 +22,20 @@ class TestDuplex extends Duplex {
   _read(_size: any) {}
 }
 
-const init = () => {
-  ipcMain.on('socket.connected', (event: any) => {
-    const channel = rpcchannel(new TestDuplex(event.sender));
-    const peer = channel.peer('electron');
-    peer.setRequestHandler('inc', ({ value }: any) => {
-      return value + 1;
+export class ElectronIpcRendererDuplex extends Duplex {
+  constructor() {
+    super();
+    ipcRenderer.on('data', (_: any, data: Uint8Array) => {
+      this.push(data);
     });
-  });
-};
+  }
 
-init();
+  // tslint:disable-next-line
+  _write(chunk: Buffer, _encoding: any, callback: Function) {
+    ipcRenderer.send('data', new Uint8Array(chunk));
+    callback();
+  }
+
+  // tslint:disable-next-line
+  _read(_size: any) {}
+}

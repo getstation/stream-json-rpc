@@ -1,45 +1,12 @@
 {
-  "name": "stream-json-rpc",
-  "version": "0.4.1",
-  "main": "lib/index",
-  "types": "lib/index",
-  "author": "joel@getstation.com",
-  "license": "MIT",
-  "files": [
-    "/lib"
-  ],
-  "scripts": {
-    "test-node-ipc": "xvfb-maybe electron-mocha --require-main test/node-ipc/main-loader.js --renderer test/node-ipc/renderer-loader.js",
-    "test-electron-ipc": "xvfb-maybe electron-mocha --require-main test/electron-ipc/main-loader.js --renderer test/electron-ipc/renderer-loader.js",
-    "test-events": "ts-mocha --exit test/test-duplex.ts",
-    "test": "concurrently \"yarn run test-events\" \"yarn run test-electron-ipc\" \"yarn run test-node-ipc\"",
-    "build": "rimraf lib && tsc -p .",
-    "prepublish": "yarn run build"
-  },
+  "name": "stream-json-rpc-root",
+  "private": true,
   "devDependencies": {
-    "@types/chai-as-promised": "^7.1.0",
     "@types/mocha": "^5.2.5",
-    "@types/node": "^8.0.0",
-    "@types/node-ipc": "^9.1.1",
-    "@types/shortid": "^0.0.29",
-    "chai": "^4.2.0",
-    "chai-as-promised": "^7.1.1",
-    "concurrently": "^4.1.0",
-    "electron": "^3.0.10",
-    "electron-mocha": "^6.0.4",
-    "mocha": "^5.2.0",
-    "node-ipc": "^9.1.1",
-    "rimraf": "^2.6.2",
-    "ts-mocha": "^2.0.0",
-    "ts-node": "^7.0.1",
+    "@types/node": "8",
+    "lerna": "^3.5.1",
     "tslint": "^5.11.0",
     "tslint-config-station": "^0.5.1",
-    "typescript": "^3.1.6",
-    "xvfb-maybe": "^0.2.1"
-  },
-  "dependencies": {
-    "@magne4000/json-rpc-peer": "^0.16.0",
-    "bpmux": "^7.0.15",
-    "rxjs": "^6.3.3"
+    "typescript": "^3.2.1"
   }
 }

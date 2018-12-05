@@ -4,6 +4,7 @@ logs
 
 # node
 /node_modules
+/packages/*/node_modules
 
 # OSX
 .DS_Store
@@ -13,6 +14,7 @@ logs
 
 # Package
 /lib
+/packages/*/lib
 
 # Yalc
 .yalc/

@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "outDir": "lib",
     "declaration": true,
     "allowJs": false,
     "experimentalDecorators": true,
@@ -25,9 +24,6 @@
       "dom"
     ]
   },
-  "include": [
-    "src/**/*.ts"
-  ],
   "exclude": [
     "node_modules",
     "**/*.spec.ts"
