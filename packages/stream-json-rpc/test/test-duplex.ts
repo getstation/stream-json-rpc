@@ -129,4 +129,13 @@ describe('Simple Duplex', () => {
     });
     return assert.equal(notifyCalled, true);
   });
+
+  it('should unpipe sockets upon close', async () => {
+    peer2to1.close();
+    assert.equal(peer2to1.closed, true);
+    const result = withTimeout(peer1to2.request('dec', {
+      value: 1,
+    }), 1000);
+    return assert.isRejected(result, 'timeout');
+  });
 });

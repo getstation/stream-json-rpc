@@ -30,10 +30,14 @@ export default function rpcchannel(duplex: Duplex, options: RPCChannelOptions = 
         ).subscribe(([, d]: [string, Duplex]) => {
           d.pipe(peer);
         });
-      const peerWrapper = mux.multiplex({
+      const peerWrapper: Duplex = mux.multiplex({
         handshake_data: Buffer.from(linkId),
       });
       peer.pipe(peerWrapper);
+      peerWrapper.on('end', () => {
+        peerWrapper.unpipe(peer);
+        peerWrapper.destroy();
+      });
       return peer;
     },
   };

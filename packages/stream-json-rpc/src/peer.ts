@@ -39,6 +39,7 @@ type RequestHandler = {
 type NotificationHandler = (params: any) => void;
 
 export default class RPCPeer extends Peer implements RPCChannelPeer {
+  public closed: boolean;
   protected requestHandlers: Map<string, RequestHandler>;
   protected notificationHandlers: Map<string, NotificationHandler>;
   protected defaultTimeout: number;
@@ -51,6 +52,7 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
 
     this.notificationHandlers = notificationHandlers;
     this.defaultTimeout = defaultRequestTimeout === undefined ? 5000 : defaultRequestTimeout;
+    this.closed = false;
   }
 
   setRequestHandler(method: string, handler: (params: any) => any, timeout: number = this.defaultTimeout) {
@@ -78,5 +80,11 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
     return () => {
       this.notificationHandlers.delete(method);
     };
+  }
+
+  close() {
+    this.closed = true;
+    // Closes piped stream and remove events listeners
+    this.push(null);
   }
 }
