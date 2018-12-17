@@ -3,8 +3,7 @@
   "private": true,
   "scripts": {
     "test": "lerna run test",
-    "build": "lerna run build",
-    "prepublish": "lerna run prepublish"
+    "build": "lerna run build"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.5",
