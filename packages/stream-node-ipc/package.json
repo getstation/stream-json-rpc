@@ -8,7 +8,6 @@
     "/lib"
   ],
   "scripts": {
-    "test": "ts-mocha --exit test/test-duplex.ts",
     "build": "rimraf lib && tsc -p .",
     "prepublish": "yarn run build"
   },

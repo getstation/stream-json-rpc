@@ -1,6 +1,11 @@
 {
   "name": "stream-json-rpc-root",
   "private": true,
+  "scripts": {
+    "test": "lerna run test",
+    "build": "lerna run build",
+    "prepublish": "lerna run prepublish"
+  },
   "devDependencies": {
     "@types/mocha": "^5.2.5",
     "@types/node": "8",
