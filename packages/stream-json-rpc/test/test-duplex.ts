@@ -131,11 +131,15 @@ describe('Simple Duplex', () => {
   });
 
   it('should unpipe sockets upon close', async () => {
+    const nbOpenedDuplex = process2._mux.duplexes.size;
     peer2to1.close();
+
     assert.equal(peer2to1.closed, true);
-    const result = withTimeout(peer1to2.request('dec', {
+    assert.equal(process2._mux.duplexes.size, nbOpenedDuplex - 1);
+
+    const result = peer1to2.request('dec', {
       value: 1,
-    }), 1000);
-    return assert.isRejected(result, 'timeout');
+    });
+    return assert.isRejected(result, 'handshake');
   });
 });

@@ -23,7 +23,7 @@ export default function rpcchannel(duplex: Duplex, options: RPCChannelOptions = 
   return {
     peer(linkId: string): RPCChannelPeer {
       const peer = new RPCPeer(options.defaultRequestTimeout);
-      handshakeObservable
+      const sub = handshakeObservable
         .pipe(
           filter(([id]) => linkId === id),
           first(),
@@ -34,11 +34,14 @@ export default function rpcchannel(duplex: Duplex, options: RPCChannelOptions = 
         handshake_data: Buffer.from(linkId),
       });
       peer.pipe(peerWrapper);
-      peerWrapper.on('end', () => {
+      peer.on('end', () => {
+        sub.unsubscribe();
         peerWrapper.unpipe(peer);
+        peerWrapper.emit('end');
         peerWrapper.destroy();
       });
       return peer;
     },
+    _mux: mux,
   };
 }

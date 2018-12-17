@@ -13,6 +13,7 @@ export interface RPCChannelOptions {
 }
 
 export interface RPCChannel {
+  _mux: any,
   peer(linkId: string): RPCChannelPeer,
 }
 
