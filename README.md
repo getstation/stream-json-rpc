@@ -1,11 +1,11 @@
 [![CircleCI](https://circleci.com/gh/getstation/stream-json-rpc.svg?style=svg)](https://circleci.com/gh/getstation/stream-json-rpc)
 # stream-json-rpc
-Easy bi-directionnal RPC for node, using the transport that you need.
+Easy bi-directionnal RPC for node/electron/browser, using the transport that you need.
 
 ## Usage
 As the transport layer must implement the `stream.Duplex` interface, some helpers are already
-available for [electron ipcMain/ipcRenderer](packages/stream-electron-ipc/src/index.ts) and
-[node-ipc](packages/stream-node-ipc/src/index.ts).
+available for [electron ipcMain/ipcRenderer](packages/stream-electron-ipc) and
+[node-ipc](packages/stream-node-ipc).
 
 ### Example
 ##### Process 1
