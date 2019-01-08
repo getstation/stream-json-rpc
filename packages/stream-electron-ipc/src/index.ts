@@ -3,15 +3,17 @@ import { ipcMain, ipcRenderer } from 'electron';
 
 export class ElectronIpcMainDuplex extends Duplex {
   webContents: Electron.WebContents;
+  wcId: number;
 
   constructor(webContents: Electron.WebContents) {
     super();
     this.webContents = webContents;
+    this.wcId = webContents.id;
     webContents.once('destroyed', () => {
       this.end();
     });
     ipcMain.on('data', (e: Electron.Event, data: Uint8Array) => {
-      if (e.sender.id === webContents.id) {
+      if (e.sender.id === this.wcId) {
         this.push(data);
       }
     });
