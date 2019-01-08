@@ -7,6 +7,9 @@ export class ElectronIpcMainDuplex extends Duplex {
   constructor(webContents: Electron.WebContents) {
     super();
     this.webContents = webContents;
+    webContents.once('destroyed', () => {
+      this.end();
+    });
     ipcMain.on('data', (e: Electron.Event, data: Uint8Array) => {
       if (e.sender.id === webContents.id) {
         this.push(data);

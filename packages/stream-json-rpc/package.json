@@ -42,7 +42,8 @@
   },
   "dependencies": {
     "@magne4000/json-rpc-peer": "^0.16.0",
-    "bpmux": "^7.0.15",
+    "bpmux": "7.0.15",
+    "pump": "^3.0.0",
     "rxjs": "^6.3.3"
   },
   "keywords": [

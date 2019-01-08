@@ -41,12 +41,14 @@ describe('Simple Duplex', () => {
   let peer2to1bis: RPCChannelPeer;
   let peer2to1ter: RPCChannelPeer;
   let notifyCalled: boolean;
+  let duplex1: TestDuplex;
+  let duplex2: TestDuplex;
 
   before(() => {
     const eventemitter1 = new EventEmitter();
     const eventemitter2 = new EventEmitter();
-    const duplex1 = new TestDuplex(eventemitter1, eventemitter2);
-    const duplex2 = new TestDuplex(eventemitter2, eventemitter1);
+    duplex1 = new TestDuplex(eventemitter1, eventemitter2);
+    duplex2 = new TestDuplex(eventemitter2, eventemitter1);
 
     // process 1
     process1 = rpcchannel(duplex2);
@@ -130,7 +132,7 @@ describe('Simple Duplex', () => {
     return assert.equal(notifyCalled, true);
   });
 
-  it('should unpipe sockets upon close', async () => {
+  it('should unpipe sockets upon peer close', async () => {
     const nbOpenedDuplex = process2._mux.duplexes.size;
     peer2to1.close();
 
@@ -141,5 +143,20 @@ describe('Simple Duplex', () => {
       value: 1,
     });
     return assert.isRejected(result, 'handshake');
+  });
+
+  it('should unpipe all peers upon socket close', async () => {
+    peer1to2bis.on('error', () => {
+      assert.ok(true);
+    });
+    peer1to2.on('error', () => {
+      assert.fail();
+    });
+
+    duplex1.destroy();
+
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    assert.equal(process2._mux.duplexes.size, 1);
   });
 });
