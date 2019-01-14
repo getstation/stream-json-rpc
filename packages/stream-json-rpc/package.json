@@ -37,7 +37,7 @@
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-station": "^0.5.1",
-    "typescript": "^3.1.6",
+    "typescript": "^3.2.2",
     "xvfb-maybe": "^0.2.1"
   },
   "dependencies": {
