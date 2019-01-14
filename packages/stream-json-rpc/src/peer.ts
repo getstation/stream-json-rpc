@@ -1,4 +1,5 @@
-import Peer, { JsonRpcError, JsonRpcPayload } from '@magne4000/json-rpc-peer';
+import Peer, { JsonRpcError, JsonRpcPayload, JsonRpcParamsSchema } from '@magne4000/json-rpc-peer';
+import { wrapError } from './errors';
 import { RPCChannelOptions, RPCChannelPeer } from './types';
 
 const callMethod = (fn: Function, args: any) => {
@@ -16,6 +17,9 @@ const withTimeout = (fn: Function, args: any, timeout: number, forwardErrors?: b
           e.toJsonRpcError = () => ({
             code: 1,
             message: e.message,
+            data: {
+              stack: e.stack,
+            },
           });
         }
         reject(e);
@@ -96,6 +100,16 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
     return () => {
       this.notificationHandlers.delete(method);
     };
+  }
+
+  request(method: string, params?: JsonRpcParamsSchema): Promise<any> {
+    return new Promise((resolve, reject) => {
+      super.request(method, params)
+        .then(resolve)
+        .catch((e: JsonRpcError) => {
+          reject(wrapError(e));
+        });
+    });
   }
 
   close() {
