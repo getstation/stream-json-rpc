@@ -27,4 +27,26 @@ describe('forwards actions to and from renderer', () => {
         return done(new Error(`Unexpected result: ${result}`));
       });
   });
+
+  it('throws a JsonRpcError', (done) => {
+    peer
+      .request('throwJson')
+      .catch((e) => {
+        if (e.toJsonRpcError().message === 'This is a JsonRpcError error') {
+          return done();
+        }
+        done(e);
+      });
+  });
+
+  it('throws a non-JsonRpcError error', (done) => {
+    peer
+      .request('throw')
+      .catch((e) => {
+        if (e.toJsonRpcError().message === 'unknown error from the peer') {
+          return done();
+        }
+        done(e);
+      });
+  });
 });
