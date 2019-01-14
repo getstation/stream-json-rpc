@@ -25,7 +25,10 @@ const firstConnection = (data: Buffer, socket: any) => {
   const id = data.toString();
   sockets.set(id, socket);
   // Create the channel on the server side
-  const channel = rpcchannel(new NodeIpcServerDuplex(ipc, socket));
+  const channel = rpcchannel(new NodeIpcServerDuplex(ipc, socket), {
+    // defaultRequestTimeout?: number, // defaults: 2000 (ms)
+    // forwardErrors?: boolean, // defaults: false (if true, errors during requests are fully forwarded to requester)
+  });
   // Get a named connection
   // On the other side, the same call must be done, with the same id, to finish the handshake
   const peer = channel.peer('connection-id');
