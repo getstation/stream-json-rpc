@@ -5,7 +5,9 @@ import rpcchannel from '../../src/rpcchannel';
 
 const init = () => {
   ipcMain.on('socket.connected', (event: any) => {
-    const channel = rpcchannel(new ElectronIpcMainDuplex(event.sender));
+    const channel = rpcchannel(new ElectronIpcMainDuplex(event.sender), {
+      forwardErrors: true,
+    });
     const peer = channel.peer('electron');
     peer.setRequestHandler('inc', ({ value }: any) => {
       return value + 1;

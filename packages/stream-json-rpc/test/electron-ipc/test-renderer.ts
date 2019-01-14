@@ -39,11 +39,11 @@ describe('forwards actions to and from renderer', () => {
       });
   });
 
-  it('throws a non-JsonRpcError error', (done) => {
+  it('throws an encapsulated JsonRpcError error', (done) => {
     peer
       .request('throw')
       .catch((e) => {
-        if (e.toJsonRpcError().message === 'unknown error from the peer') {
+        if (e.toJsonRpcError().message === 'This is an error') {
           return done();
         }
         done(e);

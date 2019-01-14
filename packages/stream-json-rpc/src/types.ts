@@ -10,6 +10,7 @@ export interface RPCNotificationHandler<X, T> {
 
 export interface RPCChannelOptions {
   defaultRequestTimeout?: number,
+  forwardErrors?: boolean,
 }
 
 export interface RPCChannel {

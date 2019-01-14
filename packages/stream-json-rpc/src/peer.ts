@@ -1,18 +1,34 @@
 import Peer, { JsonRpcError, JsonRpcPayload } from '@magne4000/json-rpc-peer';
-import { RPCChannelPeer } from './types';
+import { RPCChannelOptions, RPCChannelPeer } from './types';
 
-const withTimeout = (fn: Function, args: any, timeout: number) =>
+const callMethod = (fn: Function, args: any) => {
+  return new Promise((resolve) => {
+    resolve(fn(args));
+  });
+};
+
+const withTimeout = (fn: Function, args: any, timeout: number, forwardErrors?: boolean) =>
   new Promise((resolve, reject) => {
-    Promise
-      .resolve(fn(args))
+    callMethod(fn, args)
       .then(resolve)
-      .catch(reject);
+      .catch(e => {
+        if (forwardErrors && typeof e.toJsonRpcError !== 'function') {
+          e.toJsonRpcError = () => ({
+            code: 1,
+            message: e.message,
+          });
+        }
+        reject(e);
+      });
     if (timeout > 0) {
       setTimeout(reject, timeout, new JsonRpcError('timeout'));
     }
   });
 
-const peerCallback = (requestHandlers: Map<string, RequestHandler>, notificationHandlers: Map<string, NotificationHandler>) =>
+const peerCallback = (
+  requestHandlers: Map<string, RequestHandler>,
+  notificationHandlers: Map<string, NotificationHandler>,
+  options: RPCChannelOptions) =>
   (message: JsonRpcPayload) => {
     switch (message.type) {
       case 'request': {
@@ -20,7 +36,7 @@ const peerCallback = (requestHandlers: Map<string, RequestHandler>, notification
           throw new JsonRpcError(`Method ${message.method} does not exists`);
         }
         const { timeout, handler } = requestHandlers.get(message.method)!;
-        return withTimeout(handler, message.params, timeout);
+        return withTimeout(handler, message.params, timeout, options.forwardErrors);
       }
       case 'notification': {
         if (!notificationHandlers.has(message.method)) {
@@ -44,14 +60,14 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
   protected notificationHandlers: Map<string, NotificationHandler>;
   protected defaultTimeout: number;
 
-  constructor(defaultRequestTimeout?: number) {
+  constructor(options: RPCChannelOptions = {}) {
     const requestHandlers = new Map<string, RequestHandler>();
     const notificationHandlers = new Map<string, NotificationHandler>();
-    super(peerCallback(requestHandlers, notificationHandlers));
+    super(peerCallback(requestHandlers, notificationHandlers, options));
     this.requestHandlers = requestHandlers;
 
     this.notificationHandlers = notificationHandlers;
-    this.defaultTimeout = defaultRequestTimeout === undefined ? 5000 : defaultRequestTimeout;
+    this.defaultTimeout = options.defaultRequestTimeout === undefined ? 5000 : options.defaultRequestTimeout;
     this.closed = false;
   }
 

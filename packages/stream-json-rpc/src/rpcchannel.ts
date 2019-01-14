@@ -39,7 +39,7 @@ export default function rpcchannel(duplex: Duplex, options: RPCChannelOptions = 
 
   return {
     peer(linkId: string): RPCChannelPeer {
-      const peer = new RPCPeer(options.defaultRequestTimeout);
+      const peer = new RPCPeer(options);
       const sub = handshakeObservable
         .pipe(
           filter(([id]) => linkId === id),
