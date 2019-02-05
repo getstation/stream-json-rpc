@@ -1,5 +1,5 @@
-import { Duplex } from 'stream';
 import { ipcMain, ipcRenderer } from 'electron';
+import { Duplex } from 'stream';
 
 export class ElectronIpcMainDuplex extends Duplex {
   webContents: Electron.WebContents;
@@ -46,3 +46,12 @@ export class ElectronIpcRendererDuplex extends Duplex {
   // tslint:disable-next-line
   _read(_size: any) {}
 }
+
+export const firstConnectionHandler = (callback: (socket: ElectronIpcMainDuplex) => void) => {
+  const seensIds = new WeakSet<Electron.WebContents>();
+  ipcMain.on('data', (e: Electron.Event) => {
+    if (seensIds.has(e.sender)) return;
+    seensIds.add(e.sender);
+    callback(new ElectronIpcMainDuplex(e.sender));
+  });
+};

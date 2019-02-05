@@ -79,3 +79,13 @@ export const getServer = (appspace: string): Server => {
 
   return ipc.server;
 };
+
+export const firstConnectionHandler = (ipcServer: Server, callback: (socket: NodeIpcServerDuplex) => void) => {
+  const firstConnection = (_data: any, socket: Socket) => {
+    callback(new NodeIpcServerDuplex(ipcServer, socket));
+    ipcServer.off('data', firstConnection);
+  };
+  ipcServer.on('data', firstConnection);
+
+  return ipcServer;
+};
