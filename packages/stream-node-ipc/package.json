@@ -1,6 +1,6 @@
 {
   "name": "stream-node-ipc",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "lib/index",
   "types": "lib/index",
   "license": "MIT",
