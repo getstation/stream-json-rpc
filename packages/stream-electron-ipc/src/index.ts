@@ -49,9 +49,11 @@ export class ElectronIpcRendererDuplex extends Duplex {
 
 export const firstConnectionHandler = (callback: (socket: ElectronIpcMainDuplex) => void) => {
   const seensIds = new WeakSet<Electron.WebContents>();
-  ipcMain.on('data', (e: Electron.Event) => {
+  ipcMain.on('data', (e: Electron.Event, data: any) => {
     if (seensIds.has(e.sender)) return;
     seensIds.add(e.sender);
-    callback(new ElectronIpcMainDuplex(e.sender));
+    const duplex = new ElectronIpcMainDuplex(e.sender);
+    duplex.push(data);
+    callback(duplex);
   });
 };
