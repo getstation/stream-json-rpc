@@ -1,6 +1,8 @@
-import Peer, { JsonRpcError, JsonRpcPayload, JsonRpcParamsSchema } from '@magne4000/json-rpc-peer';
+import Peer, { JsonRpcError, JsonRpcParamsSchema, JsonRpcPayload } from '@magne4000/json-rpc-peer';
 import { wrapError } from './errors';
 import { RPCChannelOptions, RPCChannelPeer } from './types';
+
+const uuidv4 = require('uuid/v4');
 
 const callMethod = (fn: Function, args: any) => {
   return new Promise((resolve) => {
@@ -60,6 +62,7 @@ type NotificationHandler = (params: any) => void;
 
 export default class RPCPeer extends Peer implements RPCChannelPeer {
   public closed: boolean;
+  public id: string;
   protected requestHandlers: Map<string, RequestHandler>;
   protected notificationHandlers: Map<string, NotificationHandler>;
   protected defaultTimeout: number;
@@ -68,6 +71,7 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
     const requestHandlers = new Map<string, RequestHandler>();
     const notificationHandlers = new Map<string, NotificationHandler>();
     super(peerCallback(requestHandlers, notificationHandlers, options));
+    this.id = uuidv4();
     this.requestHandlers = requestHandlers;
 
     this.notificationHandlers = notificationHandlers;
