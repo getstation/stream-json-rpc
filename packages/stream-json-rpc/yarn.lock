@@ -1613,6 +1613,18 @@ sshpk@^1.7.0:
     safer-buffer "^2.0.2"
     tweetnacl "~0.14.0"
 
+stream-electron-ipc@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/stream-electron-ipc/-/stream-electron-ipc-1.0.8.tgz#025f7f6d41379f3a77bb2f8b9a77b8ab9019aec3"
+  integrity sha512-mhcKnO1Wy3IaYSZiJqIDI6r98yA5iSLIaGGt/vYOkMjLNp3SjTtE5fV/qkAOtLmEqjUkZGRkFMpZB9xN6ywVfw==
+
+stream-node-ipc@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/stream-node-ipc/-/stream-node-ipc-1.0.6.tgz#d604dbead645516c128c7d07960a54df6701db02"
+  integrity sha512-y/+oDY9RINzy56Bz//t5H0CbYHB0VDidadpAoAakoHQaOINxTmuszP9pdKgIInRf1Rz8cUNvnDkPdpoMfOBt4Q==
+  dependencies:
+    node-ipc "^9.1.1"
+
 stream-shift@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/stream-shift/-/stream-shift-1.0.0.tgz#d5c752825e5367e786f78e18e445ea223a155952"
