@@ -3,6 +3,8 @@ import { ElectronIpcRendererDuplex } from 'stream-electron-ipc';
 import { RPCChannelPeer } from '../../src';
 import rpcchannel from '../../src/rpcchannel';
 
+const longMessage = 'a'.repeat(100 * 1000);
+
 const init = () => {
   const channel = rpcchannel(new ElectronIpcRendererDuplex());
   const mainPeer = channel.peer('electron');
@@ -24,6 +26,15 @@ describe('forwards actions to and from renderer', () => {
       })
       .then((result) => {
         if (result === 2) return;
+        throw new Error(`Unexpected result: ${result}`);
+      });
+  });
+
+  it('should endure large values', () => {
+    return peer
+      .request('hugeVal')
+      .then((result) => {
+        if (result === longMessage) return;
         throw new Error(`Unexpected result: ${result}`);
       });
   });

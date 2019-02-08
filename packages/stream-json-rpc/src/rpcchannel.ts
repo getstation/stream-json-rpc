@@ -16,7 +16,7 @@ export default function rpcchannel(duplex: Duplex, options: RPCChannelOptions = 
         if (pause) pause();
         return [linkId, d];
       }),
-      shareReplay(10, 2000),
+      shareReplay(50, 5000),
     );
 
   mux.once('peer_multiplex', (d: Duplex) => {
@@ -64,6 +64,7 @@ export default function rpcchannel(duplex: Duplex, options: RPCChannelOptions = 
       mux.on('finish', () => {
         peer.close();
       });
+
       return peer;
     },
     _mux: mux,

@@ -43,6 +43,7 @@ describe('Simple Duplex', () => {
   let notifyCalled: boolean;
   let duplex1: TestDuplex;
   let duplex2: TestDuplex;
+  const longMessage = 'a'.repeat(100 * 1000);
 
   before(() => {
     const eventemitter1 = new EventEmitter();
@@ -56,6 +57,9 @@ describe('Simple Duplex', () => {
     peer1to2bis = process1.peer('1b<->2b');
     peer1to2.setRequestHandler('inc', ({ value }: any) => {
       return value + 1;
+    });
+    peer1to2.setRequestHandler('hugeVal', () => {
+      return longMessage;
     });
     peer1to2bis.setRequestHandler('inc', ({ value }: any) => {
       return value + 2;
@@ -98,6 +102,11 @@ describe('Simple Duplex', () => {
     return assert.eventually.equal(result, 2);
   });
 
+  it('should return a large value', async () => {
+    const result = peer2to1.request('hugeVal');
+    return assert.eventually.equal(result, longMessage);
+  });
+
   it('should increment given number by 2 in remote process', async () => {
     const result = peer2to1bis.request('inc', {
       value: 1,
@@ -138,11 +147,6 @@ describe('Simple Duplex', () => {
 
     assert.equal(peer2to1.closed, true);
     assert.equal(process2._mux.duplexes.size, nbOpenedDuplex - 1);
-
-    const result = peer1to2.request('dec', {
-      value: 1,
-    });
-    return assert.isRejected(result, 'handshake');
   });
 
   it('should unpipe all peers upon socket close', async () => {
@@ -157,6 +161,7 @@ describe('Simple Duplex', () => {
 
     await new Promise(resolve => setTimeout(resolve, 500));
 
-    assert.equal(process2._mux.duplexes.size, 1);
+    assert.equal(process2._mux.duplexes.size, 0);
   });
+
 });

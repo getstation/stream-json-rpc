@@ -1,4 +1,4 @@
-import Peer, { JsonRpcError, JsonRpcParamsSchema, JsonRpcPayload } from '@magne4000/json-rpc-peer';
+import Peer, { JsonRpcError, JsonRpcParamsSchema, JsonRpcPayload, parse } from '@magne4000/json-rpc-peer';
 import { wrapError } from './errors';
 import { RPCChannelOptions, RPCChannelPeer } from './types';
 
@@ -66,6 +66,7 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
   protected requestHandlers: Map<string, RequestHandler>;
   protected notificationHandlers: Map<string, NotificationHandler>;
   protected defaultTimeout: number;
+  protected stallingMessage: string;
 
   constructor(options: RPCChannelOptions = {}) {
     const requestHandlers = new Map<string, RequestHandler>();
@@ -77,6 +78,7 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
     this.notificationHandlers = notificationHandlers;
     this.defaultTimeout = options.defaultRequestTimeout === undefined ? 5000 : options.defaultRequestTimeout;
     this.closed = false;
+    this.stallingMessage = '';
   }
 
   setRequestHandler(method: string, handler: (params: any) => any, timeout: number = this.defaultTimeout) {
@@ -114,6 +116,30 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
           reject(wrapError(e));
         });
     });
+  }
+
+  public write (...args: any[]): boolean {
+    let cb;
+    const n = args.length;
+    if (n > 1 && typeof (cb = args[n - 1]) === 'function') {
+      process.nextTick(cb);
+    }
+
+    const message = String(args[0]);
+
+    // This is to handle long message that are split in chunk by streams.
+    // The goal is to wait for the message to be complete before calling `exec`.
+    const fullMessage = this.stallingMessage + message;
+    try {
+      parse(fullMessage);
+      this.stallingMessage = '';
+      super.write(fullMessage);
+    } catch (e) {
+      this.stallingMessage = fullMessage;
+    }
+
+    // indicates that other calls to `write` are allowed
+    return true;
   }
 
   close() {
