@@ -81,9 +81,11 @@ export const getServer = (appspace: string): Server => {
 };
 
 export const firstConnectionHandler = (ipcServer: Server, callback: (socket: NodeIpcServerDuplex) => void) => {
+  const seensIds = new WeakSet<Socket>();
   const firstConnection = (_data: any, socket: Socket) => {
+    if (seensIds.has(socket)) return;
+    seensIds.add(socket);
     callback(new NodeIpcServerDuplex(ipcServer, socket));
-    ipcServer.off('data', firstConnection);
   };
   ipcServer.on('data', firstConnection);
 
