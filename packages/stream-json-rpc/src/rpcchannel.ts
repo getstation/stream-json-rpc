@@ -10,8 +10,8 @@ export default function rpcchannel(duplex: Duplex, options: RPCChannelOptions = 
   pump(plex, duplex, plex);
 
   return {
-    peer(linkId: string): RPCChannelPeer {
-      const peer = new RPCPeer(options);
+    peer(linkId: string, peerOptions: RPCChannelOptions = {}): RPCChannelPeer {
+      const peer = new RPCPeer(Object.assign({}, options, peerOptions));
       const peerWrapper = plex.createSharedStream(linkId);
       pump(peer, peerWrapper, peer);
       peer.on('end', () => {
