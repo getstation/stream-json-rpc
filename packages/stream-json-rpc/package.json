@@ -1,6 +1,6 @@
 {
   "name": "stream-json-rpc",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "main": "lib/index",
   "types": "lib/index",
   "author": "joel@getstation.com",
@@ -32,7 +32,7 @@
     "node-ipc": "^9.1.1",
     "rimraf": "^2.6.2",
     "stream-electron-ipc": "^1.0.9",
-    "stream-node-ipc": "^1.0.9",
+    "stream-node-ipc": "^1.0.10",
     "ts-mocha": "^2.0.0",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
