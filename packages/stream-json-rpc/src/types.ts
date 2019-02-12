@@ -21,6 +21,6 @@ export interface RPCChannelPeer extends Peer {
   id: string;
   setRequestHandler: RPCRequestHandler<any, any, any>;
   setNotificationHandler: RPCNotificationHandler<any, any>;
-  close: () => void;
+  destroy: () => void;
   closed: boolean;
 }

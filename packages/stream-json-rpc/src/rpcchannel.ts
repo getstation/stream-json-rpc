@@ -20,7 +20,7 @@ export default function rpcchannel(duplex: Duplex, options: RPCChannelOptions = 
         peerWrapper.destroy();
       });
       peerWrapper.on('warn', (e: Error) => {
-        peer.close();
+        peer.destroy();
         peer.emit('error', e);
       });
 

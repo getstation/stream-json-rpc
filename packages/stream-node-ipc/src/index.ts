@@ -15,6 +15,13 @@ export class NodeIpcServerDuplex extends Duplex {
     ipcClient.on('data', data => {
       this.push(data);
     });
+
+    ipcClient.on('socket.disconnected', (s: Socket) => {
+      if (s === socket) {
+        this.end();
+        this.destroy();
+      }
+    });
   }
 
   // tslint:disable-next-line

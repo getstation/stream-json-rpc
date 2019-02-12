@@ -141,12 +141,13 @@ describe('Simple Duplex', () => {
     return assert.equal(notifyCalled, true);
   });
 
-  it('should unpipe sockets upon peer close', async () => {
-    // const nbOpenedDuplex = process2._mux.duplexes.size;
-    peer2to1.close();
+  it('should propagate end event upon destroy', async () => {
+    await new Promise((resolve) => {
+      peer2to1.on('end', resolve);
+      peer2to1.destroy();
+    });
 
     assert.equal(peer2to1.closed, true);
-    // assert.equal(process2._mux.duplexes.size, nbOpenedDuplex - 1);
   });
 
   it('should unpipe all peers upon socket close', async () => {

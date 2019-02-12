@@ -79,6 +79,10 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
     this.defaultTimeout = options.defaultRequestTimeout === undefined ? 5000 : options.defaultRequestTimeout;
     this.closed = false;
     this.stallingMessage = '';
+
+    this.once('end', () => {
+      this.closed = true;
+    });
   }
 
   setRequestHandler(method: string, handler: (params: any) => any, timeout: number = this.defaultTimeout) {
@@ -118,9 +122,11 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
     });
   }
 
-  close() {
-    this.closed = true;
+  destroy(error?: Error) {
     // Closes piped stream and remove events listeners
     this.push(null);
+    if (error) {
+      this.emit('error', error);
+    }
   }
 }

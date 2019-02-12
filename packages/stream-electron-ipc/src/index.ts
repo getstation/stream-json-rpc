@@ -9,8 +9,11 @@ export class ElectronIpcMainDuplex extends Duplex {
     super();
     this.webContents = webContents;
     this.wcId = webContents.id;
-    webContents.once('destroyed', () => {
+    webContents.once('close' as any, () => {
       this.end();
+    });
+    webContents.once('destroyed', () => {
+      this.destroy();
     });
     ipcMain.on('data', (e: Electron.Event, data: Uint8Array) => {
       if (e.sender.id === this.wcId) {
