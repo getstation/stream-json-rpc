@@ -66,7 +66,6 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
   protected requestHandlers: Map<string, RequestHandler>;
   protected notificationHandlers: Map<string, NotificationHandler>;
   protected defaultTimeout: number;
-  protected stallingMessage: string;
 
   constructor(options: RPCChannelOptions = {}) {
     const requestHandlers = new Map<string, RequestHandler>();
@@ -78,7 +77,6 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
     this.notificationHandlers = notificationHandlers;
     this.defaultTimeout = options.defaultRequestTimeout === undefined ? 5000 : options.defaultRequestTimeout;
     this.closed = false;
-    this.stallingMessage = '';
 
     this.once('end', () => {
       this.closed = true;
@@ -123,8 +121,8 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
   }
 
   destroy(error?: Error) {
-    // Closes piped stream and remove events listeners
-    this.push(null);
+    this.emit('close');
+    this.emit('end');
     if (error) {
       this.emit('error', error);
     }

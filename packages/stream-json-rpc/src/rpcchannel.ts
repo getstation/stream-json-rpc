@@ -4,6 +4,7 @@ import RPCPeer from './peer';
 import { RPCChannel, RPCChannelOptions, RPCChannelPeer } from './types';
 
 const multiplex = require('multiplex');
+const eos = require('end-of-stream');
 
 export default function rpcchannel(duplex: Duplex, options: RPCChannelOptions = {}): RPCChannel {
   const plex = multiplex();
@@ -14,10 +15,8 @@ export default function rpcchannel(duplex: Duplex, options: RPCChannelOptions = 
       const peer = new RPCPeer(Object.assign({}, options, peerOptions));
       const peerWrapper = plex.createSharedStream(linkId);
       pump(peer, peerWrapper, peer);
-      peer.on('end', () => {
-        peerWrapper.unpipe(peer);
-        peerWrapper.emit('end');
-        peerWrapper.destroy();
+      eos(peerWrapper, () => {
+        peer.destroy();
       });
       peerWrapper.on('warn', (e: Error) => {
         peer.destroy();

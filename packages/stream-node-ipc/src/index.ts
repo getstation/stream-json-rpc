@@ -12,8 +12,10 @@ export class NodeIpcServerDuplex extends Duplex {
     this.ipcClient = ipcClient;
     this.socket = socket;
 
-    ipcClient.on('data', data => {
-      this.push(data);
+    ipcClient.on('data', (data: any, s: Socket) => {
+      if (s === socket) {
+        this.push(data);
+      }
     });
 
     ipcClient.on('socket.disconnected', (s: Socket) => {
