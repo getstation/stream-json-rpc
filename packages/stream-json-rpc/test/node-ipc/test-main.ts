@@ -4,8 +4,10 @@ import rpcchannel from '../../src/rpcchannel';
 const init = () => {
   const ipcClient = getServer('magne4000-test-worker');
 
-  const newClientConnection = (_data: Buffer, socket: any) => {
-    const channel = rpcchannel(new NodeIpcServerDuplex(ipcClient, socket));
+  const newClientConnection = (data: Buffer, socket: any) => {
+    const x = new NodeIpcServerDuplex(ipcClient, socket);
+    x.push(data);
+    const channel = rpcchannel(x);
     const peer = channel.peer('node-ipc');
     peer.setRequestHandler('inc', ({ value }: any) => {
       return value + 1;

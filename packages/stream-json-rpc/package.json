@@ -57,5 +57,6 @@
     "readable",
     "writable",
     "multiplex"
-  ]
+  ],
+  "gitHead": "82c9525728851d2cf8ec059db0cd2db19ecac002"
 }
