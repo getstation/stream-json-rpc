@@ -63,14 +63,7 @@ export const getClient = (appspace: string, id: string = 'client'): Client => {
   ipc.config.retry = 1000;
   ipc.config.rawBuffer = true;
   ipc.config.encoding = 'hex';
-  ipc.connectTo('server', () => {
-    ipc.of.server.on(
-      'connect',
-      () => {
-        ipc.of.server.emit(Buffer.from(ipc.config.id, 'utf-8'));
-      }
-    );
-  });
+  ipc.connectTo('server', () => {});
   return ipc.of.server;
 };
 
@@ -89,10 +82,12 @@ export const getServer = (appspace: string): Server => {
 
 export const firstConnectionHandler = (ipcServer: Server, callback: (socket: NodeIpcServerDuplex) => void) => {
   const seensIds = new WeakSet<Socket>();
-  const firstConnection = (_data: any, socket: Socket) => {
+  const firstConnection = (data: any, socket: Socket) => {
     if (seensIds.has(socket)) return;
     seensIds.add(socket);
-    callback(new NodeIpcServerDuplex(ipcServer, socket));
+    const duplex = new NodeIpcServerDuplex(ipcServer, socket);
+    duplex.push(data);
+    callback(duplex);
   };
   ipcServer.on('data', firstConnection);
 
