@@ -1,5 +1,5 @@
 import { Socket } from 'net';
-import * as ipc from 'node-ipc';
+import * as nodeipc from 'node-ipc';
 import { Duplex } from 'stream';
 import { Client, Server } from './types';
 
@@ -58,24 +58,28 @@ export class NodeIpcClientDuplex extends Duplex {
   _read(_size: any) {}
 }
 
-export const getClient = (appspace: string, id: string = 'client'): Client => {
+export const getClient = (appspace: string, id: string = 'client', options: object = {}): Client => {
+  const ipc = new nodeipc.IPC();
   ipc.config.appspace = appspace;
   ipc.config.id = id;
   ipc.config.silent = true;
   ipc.config.retry = 1000;
   ipc.config.rawBuffer = true;
   ipc.config.encoding = 'hex';
+  Object.assign(ipc.config, options);
   ipc.connectTo('server', () => {});
   return ipc.of.server;
 };
 
-export const getServer = (appspace: string): Server => {
+export const getServer = (appspace: string, options: object = {}): Server => {
+  const ipc = new nodeipc.IPC();
   ipc.config.appspace = appspace;
   ipc.config.id = 'server';
   ipc.config.silent = true;
   ipc.config.retry = 1000;
   ipc.config.rawBuffer = true;
   ipc.config.encoding = 'hex';
+  Object.assign(ipc.config, options);
   ipc.serve(() => {});
   ipc.server.start();
 

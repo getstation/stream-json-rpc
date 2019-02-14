@@ -6,8 +6,9 @@
 ```typescript
 import { getServer, NodeIpcServerDuplex } from 'stream-node-ipc';
 
+const someNodeIPCConfigToOverride = { maxConnections: 12 };
 // first parameter here is node-ipc `appspace` parameter
-const ipcClient = getServer('magne4000-test-worker');
+const ipcClient = getServer('magne4000-test-worker', someNodeIPCConfigToOverride);
 
 const newClientConnection = (_data: Buffer, socket: Socket) => {
   // Direct bi-directionnal connection between a client (socket) and this server
@@ -27,8 +28,9 @@ ipcClient.on('data', newClientConnection);
 ```typescript
 import { getClient, NodeIpcClientDuplex } from 'stream-node-ipc';
 
+const someNodeIPCConfigToOverride = { logger: console.log };
 // first parameter here is node-ipc `appspace` parameter
-const ipcClient = getClient('magne4000-test-worker');
+const ipcClient = getClient('magne4000-test-worker', 'myClientId', someNodeIPCConfigToOverride);
 
 const duplex = new NodeIpcClientDuplex(ipcClient);
 duplex.write(...); // writes to the server via node-ipc
