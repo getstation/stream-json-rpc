@@ -6,6 +6,12 @@
   "author": "joel@getstation.com",
   "license": "MIT",
   "description": "Easy bi-directionnal RPC for node, using the transport that you need.",
+  "homepage": "https://github.com/getstation/stream-json-rpc/tree/master/packages/stream-json-rpc",
+  "bugs": "https://github.com/getstation/stream-json-rpc/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/getstation/stream-json-rpc.git"
+  },
   "files": [
     "/lib"
   ],

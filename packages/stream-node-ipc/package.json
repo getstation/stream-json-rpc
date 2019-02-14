@@ -4,6 +4,12 @@
   "main": "lib/index",
   "types": "lib/index",
   "license": "MIT",
+  "homepage": "https://github.com/getstation/stream-json-rpc/tree/master/packages/stream-node-ipc",
+  "bugs": "https://github.com/getstation/stream-json-rpc/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/getstation/stream-json-rpc.git"
+  },
   "files": [
     "/lib"
   ],
