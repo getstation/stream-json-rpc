@@ -10,7 +10,7 @@ const callMethod = (fn: Function, args: any) => {
   });
 };
 
-const withTimeout = (fn: Function, args: any, timeout: number, forwardErrors?: boolean) =>
+const withTimeout = (fn: Function, args: any, timeout: number, methodName: string, forwardErrors?: boolean) =>
   new Promise((resolve, reject) => {
     callMethod(fn, args)
       .then(resolve)
@@ -27,7 +27,7 @@ const withTimeout = (fn: Function, args: any, timeout: number, forwardErrors?: b
         reject(e);
       });
     if (timeout > 0) {
-      setTimeout(reject, timeout, new JsonRpcError('timeout'));
+      setTimeout(reject, timeout, new JsonRpcError(`${methodName} timeout`));
     }
   });
 
@@ -42,7 +42,7 @@ const peerCallback = (
           throw new JsonRpcError(`Method ${message.method} does not exists`);
         }
         const { timeout, handler } = requestHandlers.get(message.method)!;
-        return withTimeout(handler, message.params, timeout, options.forwardErrors);
+        return withTimeout(handler, message.params, timeout, message.method, options.forwardErrors);
       }
       case 'notification': {
         if (!notificationHandlers.has(message.method)) {
