@@ -26,6 +26,10 @@ export class ElectronIpcMainDuplex extends Duplex {
     });
   }
 
+  initConnection(channel: string) {
+    this.webContents.send(channel);
+  }
+
   // tslint:disable-next-line
   _write(chunk: Buffer, _encoding: any, callback: Function) {
     this.webContents.send('data', new Uint8Array(chunk));
@@ -57,6 +61,10 @@ export class ElectronIpcRendererDuplex extends Duplex {
     });
   }
 
+  initConnection(channel: string) {
+    this.sendTo(channel);
+  }
+
   // tslint:disable-next-line
   _write(chunk: Buffer, _encoding: any, callback: Function) {
     this.sendTo('data', new Uint8Array(chunk));
@@ -67,12 +75,14 @@ export class ElectronIpcRendererDuplex extends Duplex {
   _read(_size: any) {}
 }
 
-export const firstConnectionHandler = (callback: (socket: Duplex) => void) => {
+export const firstConnectionHandler = (callback: (socket: Duplex) => void, channel?: string) => {
   const seensIds = new Set<number>();
-  ipcRenderer.on('data', (e: any, data: any) => {
+  (isRenderer ? ipcRenderer : ipcMain).on(channel || 'data', (e: any, data: any) => {
     const senderId = getSenderId(e);
-    if (seensIds.has(senderId)) return;
-    seensIds.add(senderId);
+    if (!channel) { // default channel is 'data', and we just listen for first bytes received, not a particular event
+      if (seensIds.has(senderId)) return;
+      seensIds.add(senderId);
+    }
     let duplex: Duplex;
     if (isRenderer) {
       duplex = new ElectronIpcRendererDuplex(senderId);
