@@ -2,7 +2,8 @@ import { ipcMain, ipcRenderer } from 'electron';
 import { Duplex } from 'stream';
 
 const isRenderer = process.type === 'renderer';
-const getSenderId = (e: any) => typeof e.senderId === 'number' ? e.senderId : e.sender.id;
+const getSenderId = (e: any) => typeof e.senderId === 'number' ? e.senderId :
+  typeof e.sender.id === 'number' ? e.sender.id : 0;
 
 export class ElectronIpcMainDuplex extends Duplex {
   webContents: Electron.WebContents;
