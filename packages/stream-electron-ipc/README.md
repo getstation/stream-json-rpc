@@ -18,9 +18,17 @@ duplex.on('data', (...) => {
 ```typescript
 import { ElectronIpcRendererDuplex } from 'stream-electron-ipc';
 
-const duplex = new ElectronIpcRendererDuplex();
+// Connect to main process
+const duplex = new ElectronIpcRendererDuplex(); // equivalent to `new ElectronIpcRendererDuplex(0);`
 duplex.write(...); // writes to main process through ipc
 duplex.on('data', (...) => {
-  // Callback called when main process sends data through ipc
+  // Callback called when main process sends data through this duplex
+})
+
+// Connect to another renderer
+const duplex = new ElectronIpcRendererDuplex(rendererWebContentsId);
+duplex.write(...); // writes to the renderer process through ipc
+duplex.on('data', (...) => {
+  // Callback called when renderer process sends data through this duplex
 })
 ```
