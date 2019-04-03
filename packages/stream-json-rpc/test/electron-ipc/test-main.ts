@@ -1,13 +1,12 @@
-import { ipcMain } from 'electron';
 import { JsonRpcError } from 'json-rpc-protocol';
-import { ElectronIpcMainDuplex } from 'stream-electron-ipc';
+import { firstConnectionHandler } from 'stream-electron-ipc';
 import rpcchannel from '../../src/rpcchannel';
 
 const longMessage = 'a'.repeat(100 * 1000);
 
 const init = () => {
-  ipcMain.on('socket.connected', (event: any) => {
-    const channel = rpcchannel(new ElectronIpcMainDuplex(event.sender), {
+  firstConnectionHandler((duplex) => {
+    const channel = rpcchannel(duplex, {
       forwardErrors: true,
     });
     const peer = channel.peer('electron');
@@ -26,7 +25,7 @@ const init = () => {
     peer.setRequestHandler('hugeVal', () => {
       return longMessage;
     });
-  });
+  }, 'test');
 };
 
 init();

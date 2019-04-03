@@ -1,4 +1,3 @@
-import { ipcRenderer } from 'electron';
 import { ElectronIpcRendererDuplex } from 'stream-electron-ipc';
 import { RPCChannelPeer } from '../../src';
 import rpcchannel from '../../src/rpcchannel';
@@ -6,10 +5,10 @@ import rpcchannel from '../../src/rpcchannel';
 const longMessage = 'a'.repeat(100 * 1000);
 
 const init = () => {
-  const channel = rpcchannel(new ElectronIpcRendererDuplex());
-  const mainPeer = channel.peer('electron');
-  ipcRenderer.send('socket.connected', 'renderer1');
-  return mainPeer;
+  const duplex = new ElectronIpcRendererDuplex();
+  duplex.initConnection('test');
+  const channel = rpcchannel(duplex);
+  return channel.peer('electron');
 };
 
 describe('forwards actions to and from renderer', () => {
