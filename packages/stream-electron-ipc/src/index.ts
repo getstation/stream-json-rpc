@@ -1,6 +1,9 @@
 import { ipcMain, ipcRenderer } from 'electron';
 import { Duplex } from 'stream';
 
+const isRenderer = process.type === 'renderer';
+const getSenderId = (e: any) => typeof e.senderId === 'number' ? e.senderId : e.sender.id;
+
 export class ElectronIpcMainDuplex extends Duplex {
   webContents: Electron.WebContents;
   wcId: number;
@@ -15,8 +18,8 @@ export class ElectronIpcMainDuplex extends Duplex {
     webContents.once('destroyed', () => {
       this.destroy();
     });
-    ipcMain.on('data', (e: Electron.Event, data: Uint8Array) => {
-      if (e.sender.id === this.wcId) {
+    ipcMain.on('data', (e: any, data: Uint8Array) => {
+      if (getSenderId(e) === this.wcId) {
         this.push(data);
       }
     });
@@ -33,16 +36,29 @@ export class ElectronIpcMainDuplex extends Duplex {
 }
 
 export class ElectronIpcRendererDuplex extends Duplex {
-  constructor() {
+  wcId: number;
+  sendTo: (channel: string, ...args: any[]) => void;
+
+  constructor(webContentsId?: number) {
     super();
-    ipcRenderer.on('data', (_: any, data: Uint8Array) => {
-      this.push(data);
+    this.wcId = typeof webContentsId === 'number' ? webContentsId : 0;
+    if (this.wcId === 0) {
+      // renderer to main
+      this.sendTo = ipcRenderer.send.bind(ipcRenderer);
+    } else {
+      // renderer to renderer
+      this.sendTo = ipcRenderer.sendTo.bind(ipcRenderer, this.wcId);
+    }
+    ipcRenderer.on('data', (e: any, data: Uint8Array) => {
+      if (getSenderId(e) === this.wcId) {
+        this.push(data);
+      }
     });
   }
 
   // tslint:disable-next-line
   _write(chunk: Buffer, _encoding: any, callback: Function) {
-    ipcRenderer.send('data', new Uint8Array(chunk));
+    this.sendTo('data', new Uint8Array(chunk));
     callback();
   }
 
@@ -50,12 +66,18 @@ export class ElectronIpcRendererDuplex extends Duplex {
   _read(_size: any) {}
 }
 
-export const firstConnectionHandler = (callback: (socket: ElectronIpcMainDuplex) => void) => {
-  const seensIds = new WeakSet<Electron.WebContents>();
-  ipcMain.on('data', (e: Electron.Event, data: any) => {
-    if (seensIds.has(e.sender)) return;
-    seensIds.add(e.sender);
-    const duplex = new ElectronIpcMainDuplex(e.sender);
+export const firstConnectionHandler = (callback: (socket: Duplex) => void) => {
+  const seensIds = new Set<number>();
+  ipcRenderer.on('data', (e: any, data: any) => {
+    const senderId = getSenderId(e);
+    if (seensIds.has(senderId)) return;
+    seensIds.add(senderId);
+    let duplex: Duplex;
+    if (isRenderer) {
+      duplex = new ElectronIpcRendererDuplex(senderId);
+    } else {
+      duplex = new ElectronIpcMainDuplex(e.sender);
+    }
     duplex.push(data);
     callback(duplex);
   });
