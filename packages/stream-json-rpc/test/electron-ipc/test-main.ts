@@ -14,6 +14,10 @@ const init = () => {
       return value + 1;
     });
 
+    peer.setRequestHandler('incremote', ({ value }: any) => {
+      return peer.request('inc', { value });
+    });
+
     peer.setRequestHandler('throwJson', () => {
       throw new JsonRpcError('This is a JsonRpcError error');
     });

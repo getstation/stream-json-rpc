@@ -1,38 +1,38 @@
-import { ipcMain, ipcRenderer } from 'electron';
+import { ipcMain, ipcRenderer, remote } from 'electron';
 import { Duplex } from 'stream';
 
 const isRenderer = process.type === 'renderer';
 const getSenderId = (e: any) => typeof e.senderId === 'number' ? e.senderId :
   typeof e.sender.id === 'number' ? e.sender.id : 0;
+const getFullChannel = (channel: string, webContentsId: number) => `sei-${channel}-${webContentsId}`;
 
 export class ElectronIpcMainDuplex extends Duplex {
   webContents: Electron.WebContents;
   wcId: number;
+  channel: string;
 
-  constructor(webContents: Electron.WebContents) {
+  constructor(webContents: Electron.WebContents, channel: string = 'data') {
     super();
     this.webContents = webContents;
     this.wcId = webContents.id;
+    this.channel = getFullChannel(channel, 0);
     webContents.once('close' as any, () => {
       this.end();
     });
     webContents.once('destroyed', () => {
       this.destroy();
     });
-    ipcMain.on('data', (e: any, data: Uint8Array) => {
-      if (getSenderId(e) === this.wcId) {
-        this.push(data);
-      }
+    ipcMain.on(getFullChannel(channel, this.wcId), (_: any, data: Uint8Array) => {
+      this.push(data);
     });
-  }
 
-  initConnection(channel: string) {
+    // init connection
     this.webContents.send(channel);
   }
 
   // tslint:disable-next-line
   _write(chunk: Buffer, _encoding: any, callback: Function) {
-    this.webContents.send('data', new Uint8Array(chunk));
+    this.webContents.send(this.channel, new Uint8Array(chunk));
     callback();
   }
 
@@ -43,10 +43,12 @@ export class ElectronIpcMainDuplex extends Duplex {
 export class ElectronIpcRendererDuplex extends Duplex {
   wcId: number;
   sendTo: (channel: string, ...args: any[]) => void;
+  channel: string;
 
-  constructor(webContentsId?: number) {
+  constructor(webContentsId?: number, channel: string = 'data') {
     super();
     this.wcId = typeof webContentsId === 'number' ? webContentsId : 0;
+    this.channel = getFullChannel(channel, remote.getCurrentWebContents().id);
     if (this.wcId === 0) {
       // renderer to main
       this.sendTo = ipcRenderer.send.bind(ipcRenderer);
@@ -54,20 +56,17 @@ export class ElectronIpcRendererDuplex extends Duplex {
       // renderer to renderer
       this.sendTo = ipcRenderer.sendTo.bind(ipcRenderer, this.wcId);
     }
-    ipcRenderer.on('data', (e: any, data: Uint8Array) => {
-      if (getSenderId(e) === this.wcId) {
-        this.push(data);
-      }
+    ipcRenderer.on(getFullChannel(channel, this.wcId), (_: any, data: Uint8Array) => {
+      this.push(data);
     });
-  }
 
-  initConnection(channel: string) {
+    // init connection
     this.sendTo(channel);
   }
 
   // tslint:disable-next-line
   _write(chunk: Buffer, _encoding: any, callback: Function) {
-    this.sendTo('data', new Uint8Array(chunk));
+    this.sendTo(this.channel, new Uint8Array(chunk));
     callback();
   }
 
@@ -85,11 +84,13 @@ export const firstConnectionHandler = (callback: (socket: Duplex) => void, chann
     }
     let duplex: Duplex;
     if (isRenderer) {
-      duplex = new ElectronIpcRendererDuplex(senderId);
+      duplex = new ElectronIpcRendererDuplex(senderId, channel || 'data');
     } else {
-      duplex = new ElectronIpcMainDuplex(e.sender);
+      duplex = new ElectronIpcMainDuplex(e.sender, channel || 'data');
     }
-    duplex.push(data);
+    if (!channel) {
+      duplex.push(data);
+    }
     callback(duplex);
   });
 };

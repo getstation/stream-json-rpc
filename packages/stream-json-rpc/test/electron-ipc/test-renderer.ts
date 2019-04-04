@@ -5,8 +5,7 @@ import rpcchannel from '../../src/rpcchannel';
 const longMessage = 'a'.repeat(100 * 1000);
 
 const init = () => {
-  const duplex = new ElectronIpcRendererDuplex();
-  duplex.initConnection('test');
+  const duplex = new ElectronIpcRendererDuplex(0, 'test');
   const channel = rpcchannel(duplex);
   return channel.peer('electron');
 };
@@ -16,11 +15,26 @@ describe('forwards actions to and from renderer', () => {
 
   before(async () => {
     peer = init();
+
+    peer.setRequestHandler('inc', ({ value }: any) => {
+      return value + 1;
+    });
   });
 
   it('should increment given number in remote process', () => {
     return peer
       .request('inc', {
+        value: 1,
+      })
+      .then((result) => {
+        if (result === 2) return;
+        throw new Error(`Unexpected result: ${result}`);
+      });
+  });
+
+  it('should increment given number in remote process bis', () => {
+    return peer
+      .request('incremote', {
         value: 1,
       })
       .then((result) => {
