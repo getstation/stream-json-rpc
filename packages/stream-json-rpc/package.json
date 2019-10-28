@@ -41,17 +41,17 @@
     "stream-node-ipc": "^1.0.12",
     "ts-mocha": "^2.0.0",
     "ts-node": "^7.0.1",
-    "tslint": "^5.11.0",
-    "tslint-config-station": "^0.5.1",
-    "typescript": "^3.2.2",
+    "tslint": "^5.20.0",
+    "tslint-config-station": "^0.6.0",
+    "typescript": "^3.6.4",
     "xvfb-maybe": "^0.2.1"
   },
   "dependencies": {
     "@magne4000/json-rpc-peer": "^0.16.0",
-    "end-of-stream": "^1.4.1",
+    "end-of-stream": "^1.4.4",
     "multiplex": "^6.7.0",
     "pump": "^3.0.0",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.3"
   },
   "keywords": [
     "rpc",
