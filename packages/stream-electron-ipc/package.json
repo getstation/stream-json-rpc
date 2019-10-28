@@ -21,8 +21,8 @@
     "@types/node": "^8.0.0",
     "electron": "^3.0.14",
     "rimraf": "^2.6.2",
-    "tslint": "^5.11.0",
-    "tslint-config-station": "^0.5.1",
-    "typescript": "^3.2.2"
+    "tslint": "^5.20.0",
+    "tslint-config-station": "^0.6.0",
+    "typescript": "^3.6.4"
   }
 }

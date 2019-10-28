@@ -252,10 +252,10 @@ delayed-stream@~1.0.0:
   resolved "https://registry.yarnpkg.com/delayed-stream/-/delayed-stream-1.0.0.tgz#df3ae199acadfb7d440aaae0b29e2272b24ec619"
   integrity sha1-3zrhmayt+31ECqrgsp4icrJOxhk=
 
-diff@^3.2.0:
-  version "3.5.0"
-  resolved "https://registry.yarnpkg.com/diff/-/diff-3.5.0.tgz#800c0dd1e0a8bfbc95835c202ad220fe317e5a12"
-  integrity sha512-A46qtFgd+g7pDZinpnwiRJtxbC1hpgf0uzP3iG89scHk0AUC7A1TGxf5OiiOUv/JMZR8GOt8hL900hV0bOy5xA==
+diff@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/diff/-/diff-4.0.1.tgz#0c667cb467ebbb5cea7f14f135cc2dba7780a8ff"
+  integrity sha512-s2+XdvhPCOF01LRQBC8hf4vhbVmI2CGS5aZnxLJlT5FtdhPCDFq80q++zK2KlrVorVDdL5BOGZ/VfLrVtYNF+Q==
 
 doctrine@0.7.2:
   version "0.7.2"
@@ -1133,10 +1133,10 @@ tslint-config-airbnb@=5.11.0:
     tslint-eslint-rules "^5.4.0"
     tslint-microsoft-contrib "~5.2.0"
 
-tslint-config-station@^0.5.1:
-  version "0.5.1"
-  resolved "https://registry.yarnpkg.com/tslint-config-station/-/tslint-config-station-0.5.1.tgz#7888ef9729bda485616797b06450f605ccac8d47"
-  integrity sha512-UHYZtP/ZZzGGRalC3GYArW0unOdgLUdHNgOlTqaRVbtVtY9spxv/qgpLwgAmYhUzJHK5zxCfJoQIUYdGhR7AQg==
+tslint-config-station@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/tslint-config-station/-/tslint-config-station-0.6.0.tgz#5c8be4c296e2f11fc6e1e68a3dea26e336ebcfaa"
+  integrity sha512-E2txp3T11RmMzhUNAqGZDAasIFir9iS8ulLeXxd38qX8euhA58Bz5bXHv+c4R3led29Tym2Zfj1Agle1ZT4XTg==
   dependencies:
     tslint-config-airbnb "=5.11.0"
 
@@ -1165,16 +1165,16 @@ tslint-microsoft-contrib@~5.2.0:
   dependencies:
     tsutils "^2.27.2 <2.29.0"
 
-tslint@^5.11.0:
-  version "5.18.0"
-  resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.18.0.tgz#f61a6ddcf372344ac5e41708095bbf043a147ac6"
-  integrity sha512-Q3kXkuDEijQ37nXZZLKErssQVnwCV/+23gFEMROi8IlbaBG6tXqLPQJ5Wjcyt/yHPKBC+hD5SzuGaMora+ZS6w==
+tslint@^5.20.0:
+  version "5.20.0"
+  resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.20.0.tgz#fac93bfa79568a5a24e7be9cdde5e02b02d00ec1"
+  integrity sha512-2vqIvkMHbnx8acMogAERQ/IuINOq6DFqgF8/VDvhEkBqQh/x6SP0Y+OHnKth9/ZcHQSroOZwUQSN18v8KKF0/g==
   dependencies:
     "@babel/code-frame" "^7.0.0"
     builtin-modules "^1.1.1"
     chalk "^2.3.0"
     commander "^2.12.1"
-    diff "^3.2.0"
+    diff "^4.0.1"
     glob "^7.1.1"
     js-yaml "^3.13.1"
     minimatch "^3.0.4"
@@ -1222,10 +1222,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^3.2.2:
-  version "3.5.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.5.2.tgz#a09e1dc69bc9551cadf17dba10ee42cf55e5d56c"
-  integrity sha512-7KxJovlYhTX5RaRbUdkAXN1KUZ8PwWlTzQdHV6xNqvuFOs7+WBo10TQUqT19Q/Jz2hk5v9TQDIhyLhhJY4p5AA==
+typescript@^3.6.4:
+  version "3.6.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.6.4.tgz#b18752bb3792bc1a0281335f7f6ebf1bbfc5b91d"
+  integrity sha512-unoCll1+l+YK4i4F8f22TaNVPRHcD9PA3yCuZ8g5e0qGqlVlJ/8FSateOLLSagn+Yg5+ZwuPkL8LFUc0Jcvksg==
 
 universalify@^0.1.0:
   version "0.1.2"
