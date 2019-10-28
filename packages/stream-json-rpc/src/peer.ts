@@ -15,16 +15,17 @@ const withTimeout = (fn: Function, args: any, timeout: number, methodName: strin
     callMethod(fn, args)
       .then(resolve)
       .catch(e => {
-        if (forwardErrors && typeof e.toJsonRpcError !== 'function') {
-          e.toJsonRpcError = () => ({
+        const error: any = e instanceof Error ? e : new Error(`${methodName} ${e}`);
+        if (forwardErrors && typeof error.toJsonRpcError !== 'function') {
+          error.toJsonRpcError = () => ({
             code: 1,
-            message: e.message,
+            message: error.message,
             data: {
-              stack: e.stack,
+              stack: error.stack,
             },
           });
         }
-        reject(e);
+        reject(error);
       });
     if (timeout > 0) {
       setTimeout(reject, timeout, new JsonRpcError(`${methodName} timeout`));
