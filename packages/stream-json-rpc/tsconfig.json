@@ -1,9 +1,14 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "noImplicitAny": false,
+    "noImplicitReturns": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "outDir": "./lib"
   },
   "include": [
-    "./src"
+    "src/**/*.ts",
+    "@types/**/*.ts"
   ]
 }

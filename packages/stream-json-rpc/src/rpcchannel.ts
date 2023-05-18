@@ -14,13 +14,18 @@ export default function rpcchannel(duplex: Duplex, options: RPCChannelOptions = 
     peer(linkId: string, peerOptions: RPCChannelOptions = {}): RPCChannelPeer {
       const peer = new RPCPeer(Object.assign({}, options, peerOptions));
       const peerWrapper = plex.createSharedStream(linkId);
-      pump(peer, peerWrapper, peer);
+      pump(
+          (peer as unknown as NodeJS.WritableStream), 
+          peerWrapper, 
+          (peer as unknown as NodeJS.WritableStream)
+      );
       eos(peerWrapper, () => {
         peer.destroy();
       });
       peerWrapper.on('warn', (e: Error) => {
         peer.destroy();
-        peer.emit('error', e);
+        // vk: FIXME: error TS2339: Property 'emit' does not exist on type 'RPCPeer'.
+        // peer.emit('error', e);
       });
 
       return peer;

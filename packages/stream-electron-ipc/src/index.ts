@@ -1,4 +1,5 @@
-import { ipcMain, ipcRenderer, remote } from 'electron';
+import { ipcMain, ipcRenderer } from 'electron';
+import {getCurrentWebContents as remoteGetCurrentWebContents } from '@electron/remote';
 import { Duplex } from 'stream';
 
 const isRenderer = process.type === 'renderer';
@@ -48,7 +49,7 @@ export class ElectronIpcRendererDuplex extends Duplex {
   constructor(webContentsId?: number, channel: string = 'data') {
     super();
     this.wcId = typeof webContentsId === 'number' ? webContentsId : 0;
-    this.channel = getFullChannel(channel, remote.getCurrentWebContents().id);
+    this.channel = getFullChannel(channel, remoteGetCurrentWebContents().id);
     if (this.wcId === 0) {
       // renderer to main
       this.sendTo = ipcRenderer.send.bind(ipcRenderer);

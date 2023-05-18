@@ -1,6 +1,6 @@
 {
   "name": "stream-json-rpc",
-  "version": "0.7.9",
+  "version": "0.8.0",
   "main": "lib/index",
   "types": "lib/index",
   "author": "joel@getstation.com",
@@ -26,32 +26,37 @@
   "devDependencies": {
     "@types/chai-as-promised": "^7.1.0",
     "@types/mocha": "^5.2.5",
-    "@types/node": "^8.0.0",
-    "@types/node-ipc": "^9.1.1",
+    "@types/node": "^14.18.42",
+    "@types/node-ipc": "9.2.0",
+    "@types/pump": "1.1.1",
     "@types/shortid": "^0.0.29",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
     "concurrently": "^4.1.0",
-    "electron": "^3.0.10",
+    "electron": "^14.2.9",
     "electron-mocha": "^6.0.4",
     "mocha": "^5.2.0",
-    "node-ipc": "^9.1.1",
+    "node-ipc": "10.1.0",
     "rimraf": "^2.6.2",
-    "stream-electron-ipc": "^1.0.14",
-    "stream-node-ipc": "^1.0.13",
+    "stream-electron-ipc": "file:../stream-electron-ipc",
+    "stream-node-ipc": "file:../stream-node-ipc",
     "ts-mocha": "^2.0.0",
     "ts-node": "^7.0.1",
-    "tslint": "^5.20.0",
+    "tslint": "^5.11.0",
     "tslint-config-station": "^0.6.0",
-    "typescript": "^3.6.4",
+    "typescript": "^3.9.4",
     "xvfb-maybe": "^0.2.1"
   },
   "dependencies": {
-    "@magne4000/json-rpc-peer": "^0.16.0",
     "end-of-stream": "^1.4.4",
+    "json-rpc-peer": "^0.17.0",
     "multiplex": "^6.7.0",
     "pump": "^3.0.0",
     "uuid": "^3.3.3"
+  },
+  "devEngines": {
+    "node": ">=14.0.0",
+    "yarn": ">=1.17.3"
   },
   "keywords": [
     "rpc",
@@ -63,6 +68,5 @@
     "readable",
     "writable",
     "multiplex"
-  ],
-  "gitHead": "82c9525728851d2cf8ec059db0cd2db19ecac002"
+  ]
 }

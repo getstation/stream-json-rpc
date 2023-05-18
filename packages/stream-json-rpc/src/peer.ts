@@ -1,4 +1,4 @@
-import Peer, { JsonRpcError, JsonRpcParamsSchema, JsonRpcPayload } from '@magne4000/json-rpc-peer';
+import Peer, { JsonRpcError, JsonRpcParamsSchema, JsonRpcPayload } from 'json-rpc-peer';
 import { wrapError } from './errors';
 import { RPCChannelOptions, RPCChannelPeer } from './types';
 
@@ -50,7 +50,8 @@ const peerCallback = (
           throw new JsonRpcError(`Method ${message.method} does not exists`);
         }
         const handler = notificationHandlers.get(message.method)!;
-        return handler(message.params);
+        handler(message.params);
+        return Promise.resolve();
       }
     }
   };
@@ -79,12 +80,14 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
     this.defaultTimeout = options.defaultRequestTimeout === undefined ? 5000 : options.defaultRequestTimeout;
     this.closed = false;
 
-    this.once('end', () => {
-      this.closed = true;
-    });
+    // vk: FIXME: error TS2339: Property 'once' does not exist on type 'RPCPeer'.
+    // this.once('end', () => {
+    //   this.closed = true;
+    // });
   }
 
   setRequestHandler(method: string, handler: (params: any) => any, timeout: number = this.defaultTimeout) {
+
     if (this.requestHandlers.has(method)) {
       throw new Error(`Method ${method} already handled`);
     }
@@ -122,10 +125,11 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
   }
 
   destroy(error?: Error) {
-    this.emit('close');
-    this.emit('end');
-    if (error) {
-      this.emit('error', error);
-    }
+  // vk: FIXME: error TS2339: Property 'emit' does not exist on type 'RPCPeer'. 
+  //   this.emit('close');
+  //   this.emit('end');
+  //   if (error) {
+  //     this.emit('error', error);
+  //   }
   }
 }

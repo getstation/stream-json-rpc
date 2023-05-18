@@ -1,4 +1,4 @@
-import Peer from '@magne4000/json-rpc-peer';
+import Peer from 'json-rpc-peer';
 
 export interface RPCRequestHandler<X, T, R> {
   (method: X, handler: (params: T) => R | Promise<R>, timeout?: number): () => void,
