@@ -47,6 +47,10 @@ export class Peer extends EventEmitter implements NodeJS.WritableStream {
     encoding?: string,
     cb?: (err?: Error | null) => void
   ): boolean;
+  // vk:
+  // end(cb?: () => void): void;
+  // end(data: string | Uint8Array, cb?: () => void): void;
+  // end(str: string, encoding?: string, cb?: () => void): void;
   end(cb?: () => void): this;
   end(data: string | Uint8Array, cb?: () => void): this;
   end(str: string, encoding?: string, cb?: () => void): this;

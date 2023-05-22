@@ -99,7 +99,7 @@
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-5.2.7.tgz#315d570ccb56c53452ff8638738df60726d5b6ea"
   integrity sha512-NYrtPht0wGzhwe9+/idPaBB+TqkY9AhTvOLMkThm0IoEfLaiVQZwBwyJ5puCkO3AUCWrmcoePjp2mbFocKy4SQ==
 
-"@types/node-ipc@9.2.0":
+"@types/node-ipc@^9.2.0":
   version "9.2.0"
   resolved "https://registry.yarnpkg.com/@types/node-ipc/-/node-ipc-9.2.0.tgz#1690de08c6394195a6e507c3ece33cc0ced3423f"
   integrity sha512-0v1oucUgINvWPhknecSBE5xkz74sVgeZgiL/LkWXNTSzFaGspEToA4oR56hjza0Jkk6DsS2EiNU3M2R2KQza9A==
