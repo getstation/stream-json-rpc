@@ -1,4 +1,3 @@
-[![CircleCI](https://circleci.com/gh/getstation/stream-json-rpc.svg?style=svg)](https://circleci.com/gh/getstation/stream-json-rpc)
 # stream-json-rpc
 Easy bi-directionnal RPC for node/electron/browser, using the transport that you need.
 
