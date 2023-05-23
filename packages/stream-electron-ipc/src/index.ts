@@ -1,10 +1,25 @@
-import { ipcMain, ipcRenderer } from 'electron';
+import { ipcMain, ipcRenderer, app } from 'electron';
 import { Duplex } from 'stream';
 
 const isRenderer = process.type === 'renderer';
 const getSenderId = (e: any) => typeof e.senderId === 'number' ? e.senderId :
   typeof e.sender.id === 'number' ? e.sender.id : 0;
 const getFullChannel = (channel: string, webContentsId: number) => `sei-${channel}-${webContentsId}`;
+
+let remoteMain: any = undefined;
+let remoteRenderer: any = undefined;
+
+if (isRenderer) {
+  remoteRenderer = require('@electron/remote');
+} else {
+  remoteMain = require('@electron/remote/main');
+  remoteMain.initialize();
+
+  // See https://github.com/electron/remote/issues/94#issuecomment-1024849702
+  app.on('browser-window-created', (_, window) => {
+    remoteMain.enable(window.webContents);
+  });
+}
 
 export class ElectronIpcMainDuplex extends Duplex {
   webContents: Electron.WebContents;
@@ -47,9 +62,8 @@ export class ElectronIpcRendererDuplex extends Duplex {
 
   constructor(webContentsId?: number, channel: string = 'data') {
     super();
-    const remote = require('@electron/remote');
     this.wcId = typeof webContentsId === 'number' ? webContentsId : 0;
-    this.channel = getFullChannel(channel, remote.getCurrentWebContents().id);
+    this.channel = getFullChannel(channel, remoteRenderer.getCurrentWebContents().id);
     if (this.wcId === 0) {
       // renderer to main
       this.sendTo = ipcRenderer.send.bind(ipcRenderer);
@@ -74,6 +88,8 @@ export class ElectronIpcRendererDuplex extends Duplex {
   // tslint:disable-next-line
   _read(_size: any) {}
 }
+
+
 
 export const firstConnectionHandler = (callback: (socket: Duplex) => void, channel?: string) => {
   const seensIds = new Set<number>();

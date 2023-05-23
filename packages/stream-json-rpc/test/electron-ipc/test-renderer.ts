@@ -1,4 +1,5 @@
 import { ElectronIpcRendererDuplex } from 'stream-electron-ipc';
+
 import { RPCChannelPeer } from '../../src';
 import rpcchannel from '../../src/rpcchannel';
 
