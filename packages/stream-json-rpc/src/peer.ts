@@ -1,8 +1,11 @@
-import Peer, { JsonRpcError, JsonRpcParamsSchema, JsonRpcPayload } from 'json-rpc-peer';
+import PeerWithoutType from 'json-rpc-peer';
+
+import { JsonRpcError, JsonRpcParamsSchema, JsonRpcPayload, PeerInterface } from './json-rpc-peer-types';
 import { wrapError } from './errors';
 import { RPCChannelOptions, RPCChannelPeer } from './types';
 
 const uuidv4 = require('uuid/v4');
+const Peer: PeerInterface = PeerWithoutType;
 
 const callMethod = (fn: Function, args: any) => {
   return new Promise((resolve) => {
@@ -80,10 +83,9 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
     this.defaultTimeout = options.defaultRequestTimeout === undefined ? 5000 : options.defaultRequestTimeout;
     this.closed = false;
 
-    // vk: FIXME: error TS2339: Property 'once' does not exist on type 'RPCPeer'.
-    // this.once('end', () => {
-    //   this.closed = true;
-    // });
+    this.once('end', () => {
+      this.closed = true;
+    });
   }
 
   setRequestHandler(method: string, handler: (params: any) => any, timeout: number = this.defaultTimeout) {
@@ -125,11 +127,10 @@ export default class RPCPeer extends Peer implements RPCChannelPeer {
   }
 
   destroy(error?: Error) {
-  // vk: FIXME: error TS2339: Property 'emit' does not exist on type 'RPCPeer'. 
-  //   this.emit('close');
-  //   this.emit('end');
-  //   if (error) {
-  //     this.emit('error', error);
-  //   }
+    this.emit('close');
+    this.emit('end');
+    if (error) {
+      this.emit('error', error);
+    }
   }
 }

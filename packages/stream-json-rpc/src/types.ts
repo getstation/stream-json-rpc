@@ -1,4 +1,4 @@
-import Peer from 'json-rpc-peer';
+import { Peer } from './json-rpc-peer-types';
 
 export interface RPCRequestHandler<X, T, R> {
   (method: X, handler: (params: T) => R | Promise<R>, timeout?: number): () => void,

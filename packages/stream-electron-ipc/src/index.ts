@@ -1,5 +1,4 @@
 import { ipcMain, ipcRenderer } from 'electron';
-import * as remote from '@electron/remote';
 import { Duplex } from 'stream';
 
 const isRenderer = process.type === 'renderer';
@@ -48,6 +47,7 @@ export class ElectronIpcRendererDuplex extends Duplex {
 
   constructor(webContentsId?: number, channel: string = 'data') {
     super();
+    const remote = require('@electron/remote');
     this.wcId = typeof webContentsId === 'number' ? webContentsId : 0;
     this.channel = getFullChannel(channel, remote.getCurrentWebContents().id);
     if (this.wcId === 0) {

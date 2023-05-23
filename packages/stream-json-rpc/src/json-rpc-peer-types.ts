@@ -1,15 +1,12 @@
-/// <reference types="json-rpc-protocol" />
-/// <reference types="node" />
+import { EventEmitter } from 'events';
+import { JsonRpcPayload, JsonRpcParamsSchema } from 'json-rpc-protocol';
 
-import { EventEmitter } from "events";
-import { JsonRpcPayload, JsonRpcParamsSchema } from "json-rpc-protocol";
+export * from 'json-rpc-protocol';
 
-export as namespace JsonRpcPeer;
+export declare class Peer extends EventEmitter implements NodeJS.WritableStream {
+  writable: boolean;
 
-export * from "json-rpc-protocol";
-
-export class Peer extends EventEmitter implements NodeJS.WritableStream {
-  constructor(onmessage?: (message: JsonRpcPayload, data: any) => Promise<any>);
+  constructor(onmessage?: (message: JsonRpcPayload, data: any) => Promise<any> | any);
 
   public exec(
     message: string | object,
@@ -19,7 +16,7 @@ export class Peer extends EventEmitter implements NodeJS.WritableStream {
   /**
    * Fails all pending requests.
    */
-  public failPendingRequests(reason?: string);
+  public failPendingRequests(reason?: string): void;
 
   /**
    * This function should be called to send a request to the other end.
@@ -29,15 +26,14 @@ export class Peer extends EventEmitter implements NodeJS.WritableStream {
   /**
    * This function should be called to send a notification to the other end.
    */
-  public notify(method: string, params?: JsonRpcParamsSchema);
+  public notify(method: string, params?: JsonRpcParamsSchema): void;
 
-  public push(chunk: any, encoding?: string);
+  public push(chunk: any, encoding?: string): void;
 
   public pipe<T extends NodeJS.WritableStream>(writable: T): T;
 
   // NodeJS.WritableStream
 
-  writable: boolean;
   write(
     buffer: Uint8Array | string,
     cb?: (err?: Error | null) => void
@@ -47,12 +43,11 @@ export class Peer extends EventEmitter implements NodeJS.WritableStream {
     encoding?: string,
     cb?: (err?: Error | null) => void
   ): boolean;
-  // vk:
-  // end(cb?: () => void): void;
-  // end(data: string | Uint8Array, cb?: () => void): void;
-  // end(str: string, encoding?: string, cb?: () => void): void;
   end(cb?: () => void): this;
   end(data: string | Uint8Array, cb?: () => void): this;
   end(str: string, encoding?: string, cb?: () => void): this;
 }
-export default Peer;
+
+export interface PeerInterface extends Peer {
+  new(onmessage?: (message: JsonRpcPayload, data: any) => Promise<any> | any): PeerInterface;
+}

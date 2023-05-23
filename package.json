@@ -2,15 +2,14 @@
   "name": "stream-json-rpc-root",
   "private": true,
   "scripts": {
-    "test": "lerna run test",
-    "build": "lerna run build",
-    "bootstrap": "lerna bootstrap"
+    "test": "pnpm -r run test",
+    "build": "pnpm -r run build",
+    "bootstrap": "pnpm -r bootstrap"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.5",
     "@types/node": "^14.18.42",
     "@types/pump": "^1.0.1",
-    "lerna": "^6.6.2",
     "tslint": "^5.20.0",
     "tslint-config-station": "^0.6.0",
     "typescript": "^3.9.4"

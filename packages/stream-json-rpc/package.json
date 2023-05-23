@@ -35,11 +35,12 @@
     "concurrently": "^4.1.0",
     "electron": "^14.2.9",
     "electron-mocha": "^6.0.4",
+    "json-rpc-protocol": "^0.13.2",
     "mocha": "^5.2.0",
     "node-ipc": "10.1.0",
     "rimraf": "^2.6.2",
-    "stream-electron-ipc": "file:../stream-electron-ipc",
-    "stream-node-ipc": "file:../stream-node-ipc",
+    "stream-electron-ipc": "workspace:^",
+    "stream-node-ipc": "workspace:^",
     "ts-mocha": "^2.0.0",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
@@ -56,7 +57,7 @@
   },
   "devEngines": {
     "node": ">=14.0.0",
-    "yarn": ">=1.17.3"
+    "pnpm": ">=7.32.4"
   },
   "keywords": [
     "rpc",

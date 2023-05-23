@@ -1,5 +1,6 @@
 import * as pump from 'pump';
 import { Duplex } from 'stream';
+
 import RPCPeer from './peer';
 import { RPCChannel, RPCChannelOptions, RPCChannelPeer } from './types';
 
@@ -15,17 +16,16 @@ export default function rpcchannel(duplex: Duplex, options: RPCChannelOptions = 
       const peer = new RPCPeer(Object.assign({}, options, peerOptions));
       const peerWrapper = plex.createSharedStream(linkId);
       pump(
-          (peer as unknown as NodeJS.WritableStream), 
-          peerWrapper, 
-          (peer as unknown as NodeJS.WritableStream)
+        peer,
+        peerWrapper,
+        peer
       );
       eos(peerWrapper, () => {
         peer.destroy();
       });
       peerWrapper.on('warn', (e: Error) => {
         peer.destroy();
-        // vk: FIXME: error TS2339: Property 'emit' does not exist on type 'RPCPeer'.
-        // peer.emit('error', e);
+        peer.emit('error', e);
       });
 
       return peer;

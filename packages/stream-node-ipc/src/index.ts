@@ -1,6 +1,7 @@
 import { Socket } from 'net';
-import * as nodeipc from 'node-ipc';
+import nodeipc from 'node-ipc';
 import { Duplex } from 'stream';
+
 import { Client, Server } from './types';
 
 export class NodeIpcServerDuplex extends Duplex {
