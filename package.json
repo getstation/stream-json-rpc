@@ -3,8 +3,7 @@
   "private": true,
   "scripts": {
     "test": "pnpm -r run test",
-    "build": "pnpm -r run build",
-    "bootstrap": "pnpm -r bootstrap"
+    "build": "pnpm -r run build"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.5",

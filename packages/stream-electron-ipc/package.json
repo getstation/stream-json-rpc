@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "build": "rimraf lib && tsc -p .",
-    "prepublish": "yarn run build"
+    "prepublish": "pnpm run build"
   },
   "dependencies": {
     "@electron/remote": "^2.0.9"
