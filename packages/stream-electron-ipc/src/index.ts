@@ -1,24 +1,22 @@
-import { ipcMain, ipcRenderer, app } from 'electron';
+import { ipcMain, ipcRenderer } from 'electron';
 import { Duplex } from 'stream';
+
+const GET_CURRENT_WEB_CONTENTS_ID = 'stream-electron-ipc.get-current-web-contents-id';
 
 const isRenderer = process.type === 'renderer';
 const getSenderId = (e: any) => typeof e.senderId === 'number' ? e.senderId :
   typeof e.sender.id === 'number' ? e.sender.id : 0;
 const getFullChannel = (channel: string, webContentsId: number) => `sei-${channel}-${webContentsId}`;
 
-let remoteMain: any = undefined;
-let remoteRenderer: any = undefined;
-
-if (isRenderer) {
-  remoteRenderer = require('@electron/remote');
-} else {
-  remoteMain = require('@electron/remote/main');
-  remoteMain.initialize();
-
-  // See https://github.com/electron/remote/issues/94#issuecomment-1024849702
-  app.on('browser-window-created', (_, window) => {
-    remoteMain.enable(window.webContents);
-  });
+export const initialize = () => {
+  if (process.type === 'browser') {
+    ipcMain.on(GET_CURRENT_WEB_CONTENTS_ID, (event: Electron.IpcMainEvent) => {
+      event.returnValue = event.sender.id;
+    });
+  }
+  else {
+    throw new Error('initialize() should be called from browser process');
+  }
 }
 
 export class ElectronIpcMainDuplex extends Duplex {
@@ -63,14 +61,18 @@ export class ElectronIpcRendererDuplex extends Duplex {
   constructor(webContentsId?: number, channel: string = 'data') {
     super();
     this.wcId = typeof webContentsId === 'number' ? webContentsId : 0;
-    this.channel = getFullChannel(channel, remoteRenderer.getCurrentWebContents().id);
-    if (this.wcId === 0) {
+
+    const currentWebContentsId = ipcRenderer.sendSync(GET_CURRENT_WEB_CONTENTS_ID);
+    this.channel = getFullChannel(channel, currentWebContentsId);
+    if (this.wcId === 0) { 
       // renderer to main
       this.sendTo = ipcRenderer.send.bind(ipcRenderer);
-    } else {
+    } 
+    else { 
       // renderer to renderer
       this.sendTo = ipcRenderer.sendTo.bind(ipcRenderer, this.wcId);
     }
+
     ipcRenderer.on(getFullChannel(channel, this.wcId), (_: any, data: Uint8Array) => {
       this.push(data);
     });
@@ -88,8 +90,6 @@ export class ElectronIpcRendererDuplex extends Duplex {
   // tslint:disable-next-line
   _read(_size: any) {}
 }
-
-
 
 export const firstConnectionHandler = (callback: (socket: Duplex) => void, channel?: string) => {
   const seensIds = new Set<number>();

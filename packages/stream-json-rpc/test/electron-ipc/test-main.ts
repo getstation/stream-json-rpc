@@ -1,11 +1,13 @@
 import { JsonRpcError } from 'json-rpc-protocol';
-import { firstConnectionHandler } from 'stream-electron-ipc';
+import { initialize, firstConnectionHandler } from 'stream-electron-ipc';
 
 import rpcchannel from '../../src/rpcchannel';
 
 const longMessage = 'a'.repeat(100 * 1000);
 
 const init = () => {
+  initialize();
+
   firstConnectionHandler((duplex) => {
     const channel = rpcchannel(duplex, {
       forwardErrors: true,
