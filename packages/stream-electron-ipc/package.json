@@ -1,6 +1,6 @@
 {
   "name": "stream-electron-ipc",
-  "version": "14.0.0",
+  "version": "14.1.0",
   "main": "lib/index",
   "types": "lib/index",
   "license": "MIT",
@@ -16,9 +16,6 @@
   "scripts": {
     "build": "rimraf lib && tsc -p .",
     "prepublish": "pnpm run build"
-  },
-  "dependencies": {
-    "@electron/remote": "^2.0.9"
   },
   "devDependencies": {
     "@types/node": "^14.18.42",
