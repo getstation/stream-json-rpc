@@ -1,6 +1,6 @@
 {
   "name": "stream-electron-ipc",
-  "version": "14.1.0-RC1",
+  "version": "14.1.0",
   "main": "lib/index",
   "types": "lib/index",
   "license": "MIT",

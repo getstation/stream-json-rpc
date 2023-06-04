@@ -7,16 +7,13 @@ const isRenderer = process.type === 'renderer';
 const getSenderId = (e: any) => typeof e.senderId === 'number' ? e.senderId :
   typeof e.sender.id === 'number' ? e.sender.id : 0;
 const getFullChannel = (channel: string, webContentsId: number) => `sei-${channel}-${webContentsId}`;
+let initialized = false;
 
-export const initialize = () => {
-  if (process.type === 'browser') {
-    ipcMain.on(GET_CURRENT_WEB_CONTENTS_ID, (event: Electron.IpcMainEvent) => {
-      event.returnValue = event.sender.id;
-    });
-  }
-  else {
-    throw new Error('initialize() should be called from browser process');
-  }
+if (!initialized && !isRenderer) {
+  ipcMain.on(GET_CURRENT_WEB_CONTENTS_ID, (event: Electron.IpcMainEvent) => {
+    event.returnValue = event.sender.id;
+  });
+  initialized = true;
 }
 
 export class ElectronIpcMainDuplex extends Duplex {
@@ -64,11 +61,10 @@ export class ElectronIpcRendererDuplex extends Duplex {
 
     const currentWebContentsId = ipcRenderer.sendSync(GET_CURRENT_WEB_CONTENTS_ID);
     this.channel = getFullChannel(channel, currentWebContentsId);
-    if (this.wcId === 0) { 
+    if (this.wcId === 0) {
       // renderer to main
       this.sendTo = ipcRenderer.send.bind(ipcRenderer);
-    } 
-    else { 
+    } else {
       // renderer to renderer
       this.sendTo = ipcRenderer.sendTo.bind(ipcRenderer, this.wcId);
     }
