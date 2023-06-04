@@ -6,11 +6,11 @@
     "build": "pnpm -r run build"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.5",
-    "@types/node": "^14.18.42",
-    "@types/pump": "^1.0.1",
-    "tslint": "^5.20.0",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^14.18.48",
+    "@types/pump": "^1.1.1",
+    "tslint": "^5.20.1",
     "tslint-config-station": "^0.6.0",
-    "typescript": "^3.9.4"
+    "typescript": "^3.9.10"
   }
 }
