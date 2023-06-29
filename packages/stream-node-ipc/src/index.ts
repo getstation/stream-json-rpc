@@ -1,5 +1,5 @@
 import { Socket } from 'net';
-import nodeipc from 'node-ipc';
+import nodeipc from '@achrinza/node-ipc';
 import { Duplex } from 'stream';
 
 import { Client, Server } from './types';
