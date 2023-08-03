@@ -33,8 +33,8 @@ importers:
         specifier: ^14.18.48
         version: 14.18.48
       electron:
-        specifier: ^14.2.9
-        version: 14.2.9
+        specifier: ^18.3.7
+        version: 18.3.7
       rimraf:
         specifier: ^2.7.1
         version: 2.7.1
@@ -97,8 +97,8 @@ importers:
         specifier: ^4.1.2
         version: 4.1.2
       electron:
-        specifier: ^14.2.9
-        version: 14.2.9
+        specifier: ^18.3.7
+        version: 18.3.7
       electron-mocha:
         specifier: ^11.0.2
         version: 11.0.2
@@ -309,6 +309,10 @@ packages:
 
   /@types/node@14.18.48:
     resolution: {integrity: sha512-iL0PIMwejpmuVHgfibHpfDwOdsbmB50wr21X71VnF5d7SsBF7WK+ZvP/SCcFm7Iwb9iiYSap9rlrdhToNAWdxg==}
+    dev: true
+
+  /@types/node@16.18.39:
+    resolution: {integrity: sha512-8q9ZexmdYYyc5/cfujaXb4YOucpQxAV4RMG0himLyDUOEr8Mr79VrqsFI+cQ2M2h89YIuy95lbxuYjxT4Hk4kQ==}
     dev: true
 
   /@types/pump@1.1.1:
@@ -768,14 +772,14 @@ packages:
       is-electron-renderer: 2.0.1
     dev: true
 
-  /electron@14.2.9:
-    resolution: {integrity: sha512-7LdJFmqVzO9NLKO0hwOwPA6Kv4GSybGMcej8f2q7fVT4O8mIfL9oo/v4axVjVWm0+58ROQtHv8hYnnAs3ygG0Q==}
+  /electron@18.3.7:
+    resolution: {integrity: sha512-SDvX0VYejR1xw9PrJyvnyiDcuIhdzFVaA1NaRN2LEWXr5R6mEFl8NVTM+i5dtxMm2SHP/FPnkvmsWZs6MHijqg==}
     engines: {node: '>= 8.6'}
     hasBin: true
     requiresBuild: true
     dependencies:
       '@electron/get': 1.14.1
-      '@types/node': 14.18.48
+      '@types/node': 16.18.39
       extract-zip: 1.7.0
     transitivePeerDependencies:
       - supports-color
