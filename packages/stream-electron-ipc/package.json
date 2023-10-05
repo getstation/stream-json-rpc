@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "@types/node": "^14.18.48",
-    "electron": "^14.2.9",
+    "electron": "^22.3.25",
     "rimraf": "^2.7.1",
     "tslint": "^5.20.1",
     "tslint-config-station": "^0.6.0",
