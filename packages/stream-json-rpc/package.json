@@ -33,7 +33,7 @@
     "chai": "^4.3.7",
     "chai-as-promised": "^7.1.1",
     "concurrently": "^4.1.2",
-    "electron": "^14.2.9",
+    "electron": "^22.3.25",
     "electron-mocha": "^11.0.2",
     "json-rpc-protocol": "^0.13.2",
     "mocha": "^9.2.2",
